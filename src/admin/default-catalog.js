@@ -15,7 +15,7 @@ export const DEFAULT_CATALOG_ITEMS = [
     "galleryImages": [
       "/catalogo-assets/toyota-hilux-2011-2011/01.jpeg"
     ],
-    "whatsapp": "5511957342158",
+    "whatsapp": null,
     "badge": "Picapes",
     "galleryCount": 1,
     "description": "CD 4X4\nSR MANUAL\nRECUPERADO DE FINANCIAMENTO\nOBS : SEM SINISTRO"
@@ -36,7 +36,7 @@ export const DEFAULT_CATALOG_ITEMS = [
     "galleryImages": [
       "/catalogo-assets/fiat-toro-2024-2025/01.jpeg"
     ],
-    "whatsapp": "5511957342158",
+    "whatsapp": null,
     "badge": "Picapes",
     "galleryCount": 1,
     "description": "VOLC T270 AT6\nRECUPERADO DE FINANCIAMENTO\nOBS : SEM SINISTRO"
@@ -57,7 +57,7 @@ export const DEFAULT_CATALOG_ITEMS = [
     "galleryImages": [
       "/catalogo-assets/chevrolet-onix-2016-2016/01.jpeg"
     ],
-    "whatsapp": "5511957342158",
+    "whatsapp": null,
     "badge": "Carros",
     "galleryCount": 1,
     "description": "1.0MT LT\nRECUPERADO DE FINANCIAMENTO\nOBS : SEM SINISTRO"
@@ -77,7 +77,7 @@ export const DEFAULT_CATALOG_ITEMS = [
     "galleryImages": [
       "/catalogo-assets/chevrolet-vectra-2008-2008/01.jpeg"
     ],
-    "whatsapp": "5511957342158",
+    "whatsapp": null,
     "badge": "Carros",
     "galleryCount": 1,
     "description": "SD EXPRESSION\nRECUPERADO DE FINANCIAMENTO\nOBS : SEM SINISTRO"
@@ -97,7 +97,7 @@ export const DEFAULT_CATALOG_ITEMS = [
     "galleryImages": [
       "/catalogo-assets/renault-sandero-2011-2012/01.jpeg"
     ],
-    "whatsapp": "5511957342158",
+    "whatsapp": null,
     "badge": "Carros",
     "galleryCount": 1,
     "description": "PR1616VA\nRECUPERADO DE FINANCIAMENTO\nOBS : SEM SINISTRO"
@@ -117,7 +117,7 @@ export const DEFAULT_CATALOG_ITEMS = [
     "galleryImages": [
       "/catalogo-assets/volkswagen-gol-2010-2011/01.jpeg"
     ],
-    "whatsapp": "5511957342158",
+    "whatsapp": null,
     "badge": "Carros",
     "galleryCount": 1,
     "description": "MOTOR 1.0\nRECUPERADO DE FINANCIAMENTO\nOBS : SEM SINISTRO"
@@ -137,7 +137,7 @@ export const DEFAULT_CATALOG_ITEMS = [
     "galleryImages": [
       "/catalogo-assets/fiat-palio-2008-2008/01.jpeg"
     ],
-    "whatsapp": "5511957342158",
+    "whatsapp": null,
     "badge": "Carros",
     "galleryCount": 1,
     "description": "ELX FLEX\nRECUPERADO DE FINANCIAMENTO\nOBS : SEM SINISTRO"
@@ -157,7 +157,7 @@ export const DEFAULT_CATALOG_ITEMS = [
     "galleryImages": [
       "/catalogo-assets/chevrolet-prisma-2014-2015/01.jpeg"
     ],
-    "whatsapp": "5511957342158",
+    "whatsapp": null,
     "badge": "Carros",
     "galleryCount": 1,
     "description": "1.4AT LTZ\nRECUPERADO DE FINANCIAMENTO\nOBS : SEM SINISTRO"
@@ -178,7 +178,7 @@ export const DEFAULT_CATALOG_ITEMS = [
     "galleryImages": [
       "/catalogo-assets/honda-cg-160-titan-2019-2019/01.jpeg"
     ],
-    "whatsapp": "5511957342158",
+    "whatsapp": null,
     "badge": "Motos",
     "galleryCount": 1,
     "description": "ALCOOL/GASOLINA\nRECUPERADO DE FINANCIAMENTO\nOBS : SEM SINISTRO"
@@ -198,7 +198,7 @@ export const DEFAULT_CATALOG_ITEMS = [
     "galleryImages": [
       "/catalogo-assets/honda-nxr-bros-160-esdd-2018-2019/01.jpeg"
     ],
-    "whatsapp": "5511957342158",
+    "whatsapp": null,
     "badge": "Motos",
     "galleryCount": 1,
     "description": "ALCOOL/GASOLINA\nRECUPERADO DE FINANCIAMENTO\nOBS : SEM SINISTRO"
@@ -219,7 +219,7 @@ export const DEFAULT_CATALOG_ITEMS = [
     "galleryImages": [
       "/catalogo-assets/honda-xre-300-2023-2024/01.jpeg"
     ],
-    "whatsapp": "5511957342158",
+    "whatsapp": null,
     "badge": "Motos",
     "galleryCount": 1,
     "description": "ALCOOL/GASOLINA\nRECUPERADO DE FINANCIAMENTO\nOBS : SEM SINISTRO"
@@ -239,7 +239,7 @@ export const DEFAULT_CATALOG_ITEMS = [
     "galleryImages": [
       "/catalogo-assets/honda-biz-125-2019-2019/01.jpeg"
     ],
-    "whatsapp": "5511957342158",
+    "whatsapp": null,
     "badge": "Motos",
     "galleryCount": 1,
     "description": "ALCOOL/GASOLINA\nRECUPERADO DE FINANCIAMENTO\nOBS : SEM SINISTRO"
@@ -259,7 +259,7 @@ export const DEFAULT_CATALOG_ITEMS = [
     "galleryImages": [
       "/catalogo-assets/fiat-fiorino-2009-2010/01.jpeg"
     ],
-    "whatsapp": "5511957342158",
+    "whatsapp": null,
     "badge": "Utilitários",
     "galleryCount": 1,
     "description": "ALCOOL/GASOLINA\nRECUPERADO DE FINANCIAMENTO\nOBS : SEM SINISTRO"
@@ -279,7 +279,7 @@ export const DEFAULT_CATALOG_ITEMS = [
     "galleryImages": [
       "/catalogo-assets/fiat-uno-mille-economy-2011-2011/01.jpeg"
     ],
-    "whatsapp": "5511957342158",
+    "whatsapp": null,
     "badge": "Carros",
     "galleryCount": 1,
     "description": "ALCOOL/GASOLINA\nRECUPERADO DE FINANCIAMENTO\nOBS : SEM SINISTRO"
@@ -299,7 +299,7 @@ export const DEFAULT_CATALOG_ITEMS = [
     "galleryImages": [
       "/catalogo-assets/fiat-uno-mille-economy-2010-2011/01.jpeg"
     ],
-    "whatsapp": "5511957342158",
+    "whatsapp": null,
     "badge": "Carros",
     "galleryCount": 1,
     "description": "ALCOOL/GASOLINA\nRECUPERADO DE FINANCIAMENTO\nOBS : SEM SINISTRO"
@@ -320,7 +320,7 @@ export const DEFAULT_CATALOG_ITEMS = [
     "galleryImages": [
       "/catalogo-assets/mercedes-benz-1313-1977-1977/01.jpeg"
     ],
-    "whatsapp": "5511957342158",
+    "whatsapp": null,
     "badge": "Caminhões",
     "galleryCount": 1,
     "description": "Carroceria basculante\nConfiguração: toco\nSistema hidráulico\nDocumentação 100%, conforme o anúncio\nRECUPERADO DE FINANCIAMENTO\nOBS : SEM SINISTRO"
@@ -341,7 +341,7 @@ export const DEFAULT_CATALOG_ITEMS = [
     "galleryImages": [
       "/catalogo-assets/volkswagen-23-220-2003-2003/01.jpeg"
     ],
-    "whatsapp": "5511957342158",
+    "whatsapp": null,
     "badge": "Caminhões",
     "galleryCount": 1,
     "description": "Revisado\nMotor Cummins Série C\nPneus em bom estado\nCarroceria de 8,50 metros\nRECUPERADO DE FINANCIAMENTO\nOBS : SEM SINISTRO"
@@ -362,7 +362,7 @@ export const DEFAULT_CATALOG_ITEMS = [
     "galleryImages": [
       "/catalogo-assets/scania-p-360-2013-2013/01.jpeg"
     ],
-    "whatsapp": "5511957342158",
+    "whatsapp": null,
     "badge": "Caminhões",
     "galleryCount": 1,
     "description": "Configuração: 6x2 original\nCâmbio manual\nQuilometragem: 750 mil km\nBomba para caçamba\nRECUPERADO DE FINANCIAMENTO\nOBS : SEM SINISTRO"
@@ -382,7 +382,7 @@ export const DEFAULT_CATALOG_ITEMS = [
     "galleryImages": [
       "/catalogo-assets/mercedes-benz-1113-1981-1981/01.jpeg"
     ],
-    "whatsapp": "5511957342158",
+    "whatsapp": null,
     "badge": "Caminhões",
     "galleryCount": 1,
     "description": "Turbo\nHidráulico\nFreio a ar\nConsta baú no documento\nRECUPERADO DE FINANCIAMENTO\nOBS : SEM SINISTRO"
@@ -402,7 +402,7 @@ export const DEFAULT_CATALOG_ITEMS = [
     "galleryImages": [
       "/catalogo-assets/gm-s10-2009-2010/01.jpeg"
     ],
-    "whatsapp": "5511957342158",
+    "whatsapp": null,
     "badge": "Picapes",
     "galleryCount": 1,
     "description": "ADVANTAGE S\nRECUPERADO DE FINANCIAMENTO\nOBS : SEM SINISTRO"
@@ -423,7 +423,7 @@ export const DEFAULT_CATALOG_ITEMS = [
     "galleryImages": [
       "/catalogo-assets/chevrolet-s10-2025-2025/01.jpeg"
     ],
-    "whatsapp": "5511957342158",
+    "whatsapp": null,
     "badge": "Picapes",
     "galleryCount": 1,
     "description": "2.8 16V TURBO\nDIESEL\nHIGH COUNTRY\nCD 4X4 AUTOMÁTICO\nRECUPERADO DE FINANCIAMENTO\nOBS : SEM SINISTRO"
@@ -443,7 +443,7 @@ export const DEFAULT_CATALOG_ITEMS = [
     "galleryImages": [
       "/catalogo-assets/chevrolet-s10-2010-2011/01.jpeg"
     ],
-    "whatsapp": "5511957342158",
+    "whatsapp": null,
     "badge": "Picapes",
     "galleryCount": 1,
     "description": "2.4 MPFI EXECUTIVE\n4X2 CD 8V FLEX\n4P MANUAL\nRECUPERADO DE FINANCIAMENTO\nOBS : SEM SINISTRO"
@@ -464,7 +464,7 @@ export const DEFAULT_CATALOG_ITEMS = [
     "galleryImages": [
       "/catalogo-assets/toyota-hilux-2022-2023/01.jpeg"
     ],
-    "whatsapp": "5511957342158",
+    "whatsapp": null,
     "badge": "Picapes",
     "galleryCount": 1,
     "description": "2.8 D-4D TURBO DIESEL\nCD SRX 4X4 AUTOMÁTICO\nRECUPERADO DE FINANCIAMENTO\nOBS : SEM SINISTRO"
@@ -485,7 +485,7 @@ export const DEFAULT_CATALOG_ITEMS = [
     "galleryImages": [
       "/catalogo-assets/ford-ranger-2018-2019/01.jpeg"
     ],
-    "whatsapp": "5511957342158",
+    "whatsapp": null,
     "badge": "Picapes",
     "galleryCount": 1,
     "description": "3.2 LIMITED\n4X4 CD\n20V DIESEL\n4P AUTOMÁTICO\nRECUPERADO DE FINANCIAMENTO\nOBS : SEM SINISTRO"
@@ -505,7 +505,7 @@ export const DEFAULT_CATALOG_ITEMS = [
     "galleryImages": [
       "/catalogo-assets/ford-ranger-2013-2014/01.jpeg"
     ],
-    "whatsapp": "5511957342158",
+    "whatsapp": null,
     "badge": "Picapes",
     "galleryCount": 1,
     "description": "3.2 XLT\n4X4 CD\n20V DIESEL\n4P AUTOMÁTICO\nRECUPERADO DE FINANCIAMENTO\nOBS : SEM SINISTRO"
@@ -526,7 +526,7 @@ export const DEFAULT_CATALOG_ITEMS = [
     "galleryImages": [
       "/catalogo-assets/mitsubishi-l200-triton-2022-2023/01.jpeg"
     ],
-    "whatsapp": "5511957342158",
+    "whatsapp": null,
     "badge": "Picapes",
     "galleryCount": 1,
     "description": "2.4 16V TURBO\nDIESEL SPORT\nHPE CD 4P 4X4\nAUTOMÁTICO\nRECUPERADO DE FINANCIAMENTO\nOBS : SEM SINISTRO"
@@ -546,7 +546,7 @@ export const DEFAULT_CATALOG_ITEMS = [
     "galleryImages": [
       "/catalogo-assets/mitsubishi-l200-triton-2012-2013/01.jpeg"
     ],
-    "whatsapp": "5511957342158",
+    "whatsapp": null,
     "badge": "Picapes",
     "galleryCount": 1,
     "description": "3.2 GL 4X4CD 16V\nTURBO INTERCOLER\nDIESEL 4P MANUAL\nRECUPERADO DE FINANCIAMENTO\nOBS : SEM SINISTRO"
@@ -567,7 +567,7 @@ export const DEFAULT_CATALOG_ITEMS = [
     "galleryImages": [
       "/catalogo-assets/toyota-corolla-cross-2023-2024/01.jpeg"
     ],
-    "whatsapp": "5511957342158",
+    "whatsapp": null,
     "badge": "SUVs",
     "galleryCount": 1,
     "description": "2.0 VVT-IE\nFLEX XRE\nDIRECT SHIFT\nRECUPERADO DE FINANCIAMENTO\nOBS : SEM SINISTRO"
@@ -587,7 +587,7 @@ export const DEFAULT_CATALOG_ITEMS = [
     "galleryImages": [
       "/catalogo-assets/fiat-strada-2022-2023/01.jpeg"
     ],
-    "whatsapp": "5511957342158",
+    "whatsapp": null,
     "badge": "Picapes",
     "galleryCount": 1,
     "description": "1.3 FIREFLY FLEX\nFREEDOM CS MANUAL\nRECUPERADO DE FINANCIAMENTO\nOBS : SEM SINISTRO"
@@ -607,7 +607,7 @@ export const DEFAULT_CATALOG_ITEMS = [
     "galleryImages": [
       "/catalogo-assets/jeep-renegade-2022-2023/01.jpeg"
     ],
-    "whatsapp": "5511957342158",
+    "whatsapp": null,
     "badge": "SUVs",
     "galleryCount": 1,
     "description": "1.3 T270 TURBO\nFLEX LONGITUDE AT6\nRECUPERADO DE FINANCIAMENTO\nOBS : SEM SINISTRO"
@@ -627,7 +627,7 @@ export const DEFAULT_CATALOG_ITEMS = [
     "galleryImages": [
       "/catalogo-assets/jeep-renegade-2015-2016/01.jpeg"
     ],
-    "whatsapp": "5511957342158",
+    "whatsapp": null,
     "badge": "SUVs",
     "galleryCount": 1,
     "description": "1.8 16V FLEX\nSPORT 4P AUTOMÁTICO\nRECUPERADO DE FINANCIAMENTO\nOBS : SEM SINISTRO"
@@ -647,7 +647,7 @@ export const DEFAULT_CATALOG_ITEMS = [
     "galleryImages": [
       "/catalogo-assets/jeep-compass-2018-2018/01.jpeg"
     ],
-    "whatsapp": "5511957342158",
+    "whatsapp": null,
     "badge": "SUVs",
     "galleryCount": 1,
     "description": "2.0 16V FLEX\nLONGITUDE AUTOMÁTICO\nRECUPERADO DE FINANCIAMENTO\nOBS : SEM SINISTRO"
@@ -668,7 +668,7 @@ export const DEFAULT_CATALOG_ITEMS = [
     "galleryImages": [
       "/catalogo-assets/jeep-compass-2022-2022/01.jpeg"
     ],
-    "whatsapp": "5511957342158",
+    "whatsapp": null,
     "badge": "SUVs",
     "galleryCount": 1,
     "description": "1.3 T270 TURBO\nHÍBRIDO S 4XE AT6\nRECUPERADO DE FINANCIAMENTO\nOBS : SEM SINISTRO"
@@ -688,7 +688,7 @@ export const DEFAULT_CATALOG_ITEMS = [
     "galleryImages": [
       "/catalogo-assets/fiat-strada-2015-2015/01.jpeg"
     ],
-    "whatsapp": "5511957342158",
+    "whatsapp": null,
     "badge": "Picapes",
     "galleryCount": 1,
     "description": "ADVENTURE CD\nRECUPERADO DE FINANCIAMENTO\nOBS : SEM SINISTRO"
@@ -708,7 +708,7 @@ export const DEFAULT_CATALOG_ITEMS = [
     "galleryImages": [
       "/catalogo-assets/fiat-strada-2011-2011/01.jpeg"
     ],
-    "whatsapp": "5511957342158",
+    "whatsapp": null,
     "badge": "Picapes",
     "galleryCount": 1,
     "description": "ADVENTURE FLEX\nRECUPERADO DE FINANCIAMENTO\nOBS : SEM SINISTRO"
@@ -738,7 +738,7 @@ export const DEFAULT_CATALOG_ITEMS = [
       "/catalogo-assets/toyota-hilux-3-0-srv-4x4-cd/09.jpg",
       "/catalogo-assets/toyota-hilux-3-0-srv-4x4-cd/10.jpg"
     ],
-    "whatsapp": "5511957342158",
+    "whatsapp": null,
     "badge": "Picapes",
     "galleryCount": 10,
     "description": "16V TURBO INTERCOOLER\nDIESEL\nAUTOMÁTICO\n2009/2010\nRECUPERADO DE FINANCIAMENTO\nOBS : SEM SINISTRO"
@@ -766,7 +766,7 @@ export const DEFAULT_CATALOG_ITEMS = [
       "/migracao-assets/633961893db46c592a463534.jpg",
       "/migracao-assets/9e11d06061094b1f92d6538c.jpg"
     ],
-    "whatsapp": "5511957342158",
+    "whatsapp": null,
     "badge": "Máquinas",
     "galleryCount": 8,
     "description": "✅ Ano: 2012\n✅ Horas de trilha: 1.200 h\n✅ Horas de motor: 1.600 h\n✅ Peneira fixa\n✅ Rodados duplos\n✅ Nunca colheu milho\nRECUPERADO DE FINANCIAMENTO\nOBS : SEM SINISTRO"
@@ -792,7 +792,7 @@ export const DEFAULT_CATALOG_ITEMS = [
       "/migracao-assets/409e5b38e92749777b36871d.jpg",
       "/migracao-assets/9b7595e6754ccc19a8f95f39.jpg"
     ],
-    "whatsapp": "5511957342158",
+    "whatsapp": null,
     "badge": "Máquinas",
     "galleryCount": 6,
     "description": "Ano 2021\nHoras 3.459\nTransmissão Power-quad \nPiloto automático/GPS STARFIRE 6000 + GS3\nBarramento hidráulico e 3° ponto \nOriginal sem reforma\nRECUPERADO DE FINANCIAMENTO\nOBS : SEM SINISTRO"
@@ -815,7 +815,7 @@ export const DEFAULT_CATALOG_ITEMS = [
       "/migracao-assets/01ee429bdc55c0ac853220eb.jpg",
       "/migracao-assets/453b60cb300c7977a58aa4fc.jpg"
     ],
-    "whatsapp": "5511957342158",
+    "whatsapp": null,
     "badge": "Máquinas",
     "galleryCount": 4,
     "description": "Ano 2003\nTração 4x4\nTransmissão power-quad tm\nBarramento hidráulica\nRECUPERADO DE FINANCIAMENTO\nOBS : SEM SINISTRO"
@@ -843,7 +843,7 @@ export const DEFAULT_CATALOG_ITEMS = [
       "/migracao-assets/f63072f49323c12a3feb50c7.jpg",
       "/migracao-assets/da65619f722b3c3a9e19615b.jpg"
     ],
-    "whatsapp": "5511957342158",
+    "whatsapp": null,
     "badge": "Máquinas",
     "galleryCount": 8,
     "description": "Ano – 2022\n✅ Modelo: JCB 4CX\n✅ Único dono\n✅ Motor novo\n✅ 17.350 horas\n✅ Funcionando perfeitamente, pronta para entrar em operação.\n💳 Financiamento disponível junto ao Banco BV Financeira, com condições facilitadas.\nRECUPERADO DE FINANCIAMENTO\nOBS : SEM SINISTRO"
@@ -866,7 +866,7 @@ export const DEFAULT_CATALOG_ITEMS = [
       "/migracao-assets/3e8e4a0c62e6c6da033ee397.jpg",
       "/migracao-assets/44a66ae41e34214de907d2ee.jpg"
     ],
-    "whatsapp": "5511957342158",
+    "whatsapp": null,
     "badge": "Máquinas",
     "galleryCount": 4,
     "description": "HORAS: 206 - ANO 2023\nTodo original \n150cv\nRECUPERADO DE FINANCIAMENTO\nOBS : SEM SINISTRO"
@@ -890,7 +890,7 @@ export const DEFAULT_CATALOG_ITEMS = [
       "/migracao-assets/9e446b47584a1c486a61d009.jpg",
       "/migracao-assets/d66ddef6073e115981a1bcbe.jpg"
     ],
-    "whatsapp": "5511957342158",
+    "whatsapp": null,
     "badge": "Máquinas",
     "galleryCount": 5,
     "description": "✅Ano 2011\n✅ 4X4 \n✅ 7 MIL HORAS\nContrapeso dianteiro e traseiro\nBom de mecânica, motor, caixa e hidráulico. \nCom procedência\nNota fiscal e toda a documentação para financiamento.\nVale a pena conferir\nRECUPERADO DE FINANCIAMENTO\nOBS : SEM SINISTRO"
@@ -915,7 +915,7 @@ export const DEFAULT_CATALOG_ITEMS = [
       "/migracao-assets/686ab80297a3e01e5d3a7061.jpg",
       "/migracao-assets/2794d8b36122552efc88a2a2.jpg"
     ],
-    "whatsapp": "5511957342158",
+    "whatsapp": null,
     "badge": "Máquinas",
     "galleryCount": 6,
     "description": "✅Trator Massey Ferguson 275✅\n\n✅Ano 1995\n✅Motor de 75 cv\n✅Câmbio 3 alavanca\n\nBem calçado de pneus.\nHidráulico e tomada de força ok\n\nBom de mecânica\nRECUPERADO DE FINANCIAMENTO\nOBS : SEM SINISTRO"
@@ -941,7 +941,7 @@ export const DEFAULT_CATALOG_ITEMS = [
       "/migracao-assets/a052ed1f54555adea1309c89.jpg",
       "/migracao-assets/7b8ad19d1506d1f10659fd43.jpg"
     ],
-    "whatsapp": "5511957342158",
+    "whatsapp": null,
     "badge": "Máquinas",
     "galleryCount": 7,
     "description": "78cv | Ano 2021 | 1.970h originais\nTransmissão 12x12 PowrReverse™️\nMotor 4cc turbo intercooler\nTDP eletro-hidráulico | 2 VCR\nCarregadeira autonivelante com joystick\nRECUPERADO DE FINANCIAMENTO\nOBS : SEM SINISTRO"
@@ -964,7 +964,7 @@ export const DEFAULT_CATALOG_ITEMS = [
       "/migracao-assets/6225b83e68c26e77149e3b91.jpg",
       "/migracao-assets/65b43774a29664c8b1fd5885.jpg"
     ],
-    "whatsapp": "5511957342158",
+    "whatsapp": null,
     "badge": "Máquinas",
     "galleryCount": 3,
     "description": "Equipamento novo, nunca usado, em estado impecável e pronto para o trabalho.\n* Espaçamento: 270 mm\n* 100% funcional\n* Estrutura reforçada\nRECUPERADO DE FINANCIAMENTO\nOBS : SEM SINISTRO"
@@ -991,7 +991,7 @@ export const DEFAULT_CATALOG_ITEMS = [
       "/migracao-assets/90ba47d2b3a8b939d47bc8aa.jpg",
       "/migracao-assets/fe9417723ab9a6fb0bbc727c.jpg"
     ],
-    "whatsapp": "5511957342158",
+    "whatsapp": null,
     "badge": "Máquinas",
     "galleryCount": 8,
     "description": "RECUPERADO DE FINANCIAMENTO\nOBS : SEM SINISTRO"
@@ -1016,7 +1016,7 @@ export const DEFAULT_CATALOG_ITEMS = [
       "/migracao-assets/8b7db7fc8f1e99ba3f2527bc.jpg",
       "/migracao-assets/57603d3e7e2732bfef4bf3b4.jpg"
     ],
-    "whatsapp": "5511957342158",
+    "whatsapp": null,
     "badge": "Máquinas",
     "galleryCount": 6,
     "description": "Pá carregadeira \nMarca Volvo\nModelo L70F\nAno 2021 e 2022\nMáquinas extra!\nRECUPERADO DE FINANCIAMENTO\nOBS : SEM SINISTRO"
@@ -1043,7 +1043,7 @@ export const DEFAULT_CATALOG_ITEMS = [
       "/migracao-assets/52f2e4e925e6c69a286fe021.jpg",
       "/migracao-assets/0fd063367f562fd0197d504c.jpg"
     ],
-    "whatsapp": "5511957342158",
+    "whatsapp": null,
     "badge": "Máquinas",
     "galleryCount": 7,
     "description": "CARRETA AGRÍCOLA BASCULANTE 6 TONELADAS\nEquipamento em excelente estado de conservação, revisado e pronto para o trabalho. Ideal para transporte de grãos, silagem e adubo, garantindo praticidade e eficiência no dia a dia da propriedade.\nEspecificações: • Capacidade de carga: 6 toneladas / 7 m³\n* 2 eixos separados (maior estabilidade)\n* Rodado aro 16\n* Medidas: 3.500 x 2.000 x 1.000 mm\n* Estrutura reforçada\n* Sistema hidráulico funcionando perfeitamente\nVALOR À VISTA: R$ 28.000,00\nRECUPERADO DE FINANCIAMENTO\nOBS : SEM SINISTRO"
@@ -1071,7 +1071,7 @@ export const DEFAULT_CATALOG_ITEMS = [
       "/migracao-assets/381954984aa48d8264dd8afd.jpg",
       "/migracao-assets/93cd2c3a0f013eddc770d8a8.jpg"
     ],
-    "whatsapp": "5511957342158",
+    "whatsapp": null,
     "badge": "Máquinas",
     "galleryCount": 8,
     "description": "RECUPERADO DE FINANCIAMENTO\nOBS : SEM SINISTRO"
@@ -1096,7 +1096,7 @@ export const DEFAULT_CATALOG_ITEMS = [
       "/migracao-assets/2d3ad94806537d61c401d326.jpg",
       "/migracao-assets/fb301fefc3b6efc165714d76.jpg"
     ],
-    "whatsapp": "5511957342158",
+    "whatsapp": null,
     "badge": "Máquinas",
     "galleryCount": 6,
     "description": "Pá carregadeira  Marca Volvo Modelo L70F Ano 2021 e 2022 Máquinas extra!   Valor 380.000 R$  à vista, ou financiamento pelo plano safra\nRECUPERADO DE FINANCIAMENTO\nOBS : SEM SINISTRO"
@@ -1123,7 +1123,7 @@ export const DEFAULT_CATALOG_ITEMS = [
       "/migracao-assets/011415a140086c3cb688db21.jpg",
       "/migracao-assets/53bcf1159a3583c8f099ba9c.jpg"
     ],
-    "whatsapp": "5511957342158",
+    "whatsapp": null,
     "badge": "Máquinas",
     "galleryCount": 8,
     "description": "trator Massey Ferguson 4275  4x4-Ano:2013 \nTração Central 4x4\nBarramento hidráulico/TDP/02 VCR's\n4.771 horas\nRECUPERADO DE FINANCIAMENTO\nOBS : SEM SINISTRO"
@@ -1145,7 +1145,7 @@ export const DEFAULT_CATALOG_ITEMS = [
       "/migracao-assets/23c459fedc641b13d7a2494f.jpg",
       "/migracao-assets/bf457f645363b4ec2061ad86.jpg"
     ],
-    "whatsapp": "5511957342158",
+    "whatsapp": null,
     "badge": "Máquinas",
     "galleryCount": 3,
     "description": "🟩TRATOR NEW HOLLAND 7630🟩\n\nTOTALMENTE REVISADO MECANICA, MOTOR,HIDRAULICA,ELETRICA, BOM PNEUS TUDO REVISADO.\n\nTrator NewHoland 7630, Ano 2001, Com Super Redutor, Dualpower, Revisado Somente Com Peças Originais NewHoland, Tem Nota Fiscal de Origem, Ótimo Estado de Conservação\nRECUPERADO DE FINANCIAMENTO\nOBS : SEM SINISTRO"
@@ -1171,7 +1171,7 @@ export const DEFAULT_CATALOG_ITEMS = [
       "/migracao-assets/27c8c8e0c6bacd1dfd6406b8.jpg",
       "/migracao-assets/e901dbc08539ca15f8ae939e.jpg"
     ],
-    "whatsapp": "5511957342158",
+    "whatsapp": null,
     "badge": "Máquinas",
     "galleryCount": 7,
     "description": "Original e revisada.\nCom garantia e procedência.\nTRATOR MASSEY FERGUSON 290 ANO 1980\nREALIZAMOS FINANCIAMETOS\nRECUPERADO DE FINANCIAMENTO\nOBS : SEM SINISTRO"
@@ -1195,7 +1195,7 @@ export const DEFAULT_CATALOG_ITEMS = [
       "/migracao-assets/ba61ec5e959357fa7d8da3ba.jpg",
       "/migracao-assets/83450bbd22fbac2a821f477b.jpg"
     ],
-    "whatsapp": "5511957342158",
+    "whatsapp": null,
     "badge": "Máquinas",
     "galleryCount": 5,
     "description": "✅Ano 2005 \n✅Pneus bons \n✅Revisado funciona perfeitamente \n✅Conjunto frontal de concha\nRECUPERADO DE FINANCIAMENTO\nOBS : SEM SINISTRO"
@@ -1219,7 +1219,7 @@ export const DEFAULT_CATALOG_ITEMS = [
       "/migracao-assets/334bc396548198974d7070ab.jpg",
       "/migracao-assets/791bc7664ad8997996516ba3.jpg"
     ],
-    "whatsapp": "5511957342158",
+    "whatsapp": null,
     "badge": "Máquinas",
     "galleryCount": 5,
     "description": "DAMOS GARANTIA DE MOTOR E CÂMBIO\n1 ANO(75cv)Ano 2006-Horas 8.000\nRECUPERADO DE FINANCIAMENTO\nOBS : SEM SINISTRO"
@@ -1244,7 +1244,7 @@ export const DEFAULT_CATALOG_ITEMS = [
       "/migracao-assets/03d8cf5bd9d541290933d906.jpg",
       "/migracao-assets/6ed89ff4ea5675cc41d109cb.jpg"
     ],
-    "whatsapp": "5511957342158",
+    "whatsapp": null,
     "badge": "Máquinas",
     "galleryCount": 6,
     "description": "Ano:2015\nMotor 4cc/bomba injetora Bosch\nBarramento hidráulico/TDP/02 VCR's\n100% operacional \nSuper Redutor De Velocidade\nRECUPERADO DE FINANCIAMENTO\nOBS : SEM SINISTRO"
@@ -1269,7 +1269,7 @@ export const DEFAULT_CATALOG_ITEMS = [
       "/migracao-assets/8a54795a1fcd6417d40f0d47.jpg",
       "/migracao-assets/1b03495520582fa997f29a8f.jpg"
     ],
-    "whatsapp": "5511957342158",
+    "whatsapp": null,
     "badge": "Máquinas",
     "galleryCount": 6,
     "description": "TRATOR MASSEY FERGUSON 292-ANO 2008-LAMINA\n\nO VALOR DO TRATOR 💲 VALORR$95.000.00\nREALIZAMOS FINANCIAMENTO\nRECUPERADO DE FINANCIAMENTO\nOBS : SEM SINISTRO"
@@ -1294,7 +1294,7 @@ export const DEFAULT_CATALOG_ITEMS = [
       "/migracao-assets/9314ecbc5d0b1ae827e5b622.jpg",
       "/migracao-assets/aaa1df2164667985880710ac.jpg"
     ],
-    "whatsapp": "5511957342158",
+    "whatsapp": null,
     "badge": "Máquinas",
     "galleryCount": 5,
     "description": "A 750 Ano: 2018\n2.300 horas\nRECUPERADO DE FINANCIAMENTO\nOBS : SEM SINISTRO"
@@ -1320,7 +1320,7 @@ export const DEFAULT_CATALOG_ITEMS = [
       "/migracao-assets/0e17363a0e33f3931cd08e44.jpg",
       "/migracao-assets/e4f3e38712bc2f57aafacf94.jpg"
     ],
-    "whatsapp": "5511957342158",
+    "whatsapp": null,
     "badge": "Máquinas",
     "galleryCount": 7,
     "description": "MASSEY FERGUSON 4290 – 2015 | CABINADO\nTrator em excelente estado de conservação, pronto para o trabalho!\nPrincipais características: • Cabine fechada (mais conforto e segurança)\n* Comando duplo\n* Pneus novos\n* Pesos traseiros e dianteiros\n* Máquina revisada e bem cuidada\nDocumentação: • Possui nota fiscal de origem\n* Manual disponivel\nRECUPERADO DE FINANCIAMENTO\nOBS : SEM SINISTRO"

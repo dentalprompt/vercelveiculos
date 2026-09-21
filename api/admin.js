@@ -41,7 +41,7 @@ const getTodayInSaoPaulo = () =>
     day: "2-digit"
   }).format(new Date());
 
-const contractSellerName = "PRIME LEILÕES";
+const contractSellerName = "VERCEL VEÍCULOS E MAQUINÁRIOS";
 
 const normalizeInvoicePayload = (invoice) => {
   if (!invoice) {
@@ -621,7 +621,7 @@ export default async function handler(req, res) {
           },
           dueDate: dueDate || undefined,
           metadata: {
-            provider: "PRIME LEILÕES",
+            provider: "VERCEL VEÍCULOS E MAQUINÁRIOS",
             invoiceTitle: String(title).trim(),
             invoiceToken: publicToken
           },

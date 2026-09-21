@@ -1,4 +1,4 @@
-# PRIME LEILÕES
+# VERCEL VEÍCULOS E MAQUINÁRIOS
 
 Site institucional com catálogo, página de detalhe, cadastro e login com autenticação JWT própria usando Supabase apenas como banco Postgres.
 

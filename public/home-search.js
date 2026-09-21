@@ -4,7 +4,7 @@
   const count = document.getElementById('homeSearchCount');
   let items = null;
   const update = () => {
-    if (items) count.textContent = `(${items.filter((item) => window.primeCatalogMatches(item, category.value, query.value)).length})`;
+    if (items) count.textContent = `(${items.filter((item) => window.vercelCatalogMatches(item, category.value, query.value)).length})`;
   };
   const buttons = [...document.querySelectorAll('.home-search__category')];
   const syncCategory = () => {

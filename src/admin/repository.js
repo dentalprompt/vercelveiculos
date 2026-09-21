@@ -4,7 +4,7 @@ import { createUser, findUserByEmailOrCpf, updateUserPasswordAndRole } from "../
 import { DEFAULT_CATALOG_ITEMS } from "./default-catalog.js";
 import { countContracts, ensureContractSchema, listContracts } from "../contracts/repository.js";
 
-const DEFAULT_ADMIN_EMAIL = (process.env.ADMIN_EMAIL || "admin@prime-leiloes.local").trim().toLowerCase();
+const DEFAULT_ADMIN_EMAIL = (process.env.ADMIN_EMAIL || "admin@example.invalid").trim().toLowerCase();
 const DEFAULT_ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
 
 let adminSchemaPromise;
@@ -166,17 +166,17 @@ export const ensureDefaultAdminUser = async () => {
     }
 
     return createUser({
-      fullName: "Administrador PRIME LEILÕES",
+      fullName: "Administrador VERCEL VEÍCULOS E MAQUINÁRIOS",
       email: DEFAULT_ADMIN_EMAIL,
-      whatsapp: "+55 11 95734-2158",
+      whatsapp: "",
       cpf: "000.000.000-00",
       cep: "00000-000",
       address: "Painel Administrativo",
       number: "S/N",
       district: "Centro",
       complement: null,
-      city: "Ipiranga",
-      state: "PR",
+      city: "Barueri",
+      state: "SP",
       photoUrl: null,
       passwordHash,
       role: "admin"
@@ -216,7 +216,7 @@ export const ensureDefaultCatalogItems = async () => {
             item.yearLabel,
             item.imageUrl,
             JSON.stringify(Array.isArray(item.galleryImages) && item.galleryImages.length ? item.galleryImages : [item.imageUrl]),
-            item.whatsapp || "5511957342158",
+            item.whatsapp || null,
             item.badge || item.category,
             item.galleryCount || (Array.isArray(item.galleryImages) && item.galleryImages.length ? item.galleryImages.length : 1),
             item.description

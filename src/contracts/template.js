@@ -77,6 +77,13 @@ const getSignatureClass = (style = "cursive") => {
 const formatSignatureHash = (value, fallback) => escapeHtml(String(value || fallback || "-"));
 
 export const renderAcquisitionContractHtml = (contract) => {
+  // Preserve the original entity on documents with an existing seller signature.
+  const historical = Boolean(contract.sellerSignedAt) && /PRIME|SURI/i.test(contract.sellerName || "");
+  const brandName = historical ? "PRIME LEILÕES" : "VERCEL VEÍCULOS E MAQUINÁRIOS";
+  const sellerCnpj = historical ? "32.081.982/0001-80" : "53.407.174/0001-30";
+  const sellerAddress = historical
+    ? "RUA PROFESSOR ZEFERINO VAZ, 107, VILA ARAPUÁ, SÃO PAULO - SP, CEP 04258-000"
+    : "R. JUSSARA, 800 - JARDIM SANTA CECILIA - BARUERI - SP";
   const sellerSignatureText = escapeHtml(
     formatCompanySignatureText(contract.sellerSignatureText || contract.sellerName)
   );
@@ -96,10 +103,10 @@ export const renderAcquisitionContractHtml = (contract) => {
   return `
     <article class="contract-document">
       <header class="contract-document__header">
-        <div class="contract-document__brand">
-          <img src="/prime-leiloes.png" alt="PRIME LEILÕES" />
+        <div class="contract-document__brand${historical ? " contract-document__brand--historical" : ""}">
+          <img src="/${historical ? "prime-leiloes.png" : "logonovovec.png"}" alt="${brandName}" />
           <div>
-            <strong>PRIME LEILÕES</strong>
+            <strong>${brandName}</strong>
             <span>LEILÕES E INTERMEDIAÇÕES</span>
           </div>
         </div>
@@ -111,8 +118,8 @@ export const renderAcquisitionContractHtml = (contract) => {
 
         <p class="contract-lead">
           Pelo presente instrumento particular, de um lado <strong>${escapeHtml(contract.sellerName)}</strong>,
-          inscrita no CNPJ sob o nº <strong>32.081.982/0001-80</strong>, com endereço comercial em
-          <strong>RUA PROFESSOR ZEFERINO VAZ, 107, VILA ARAPUÁ, SÃO PAULO - SP, CEP 04258-000</strong>,
+          inscrita no CNPJ sob o nº <strong>${sellerCnpj}</strong>, com endereço comercial em
+          <strong>${sellerAddress}</strong>,
           doravante denominada VENDEDORA, e de outro lado <strong>${escapeHtml(contract.clientName || "CLIENTE")}</strong>,
           inscrito no CPF sob o nº <strong>${escapeHtml(contract.clientCpf || "-")}</strong>,
           residente e domiciliado em <strong>${escapeHtml(contract.clientAddress || "-")}</strong>,
