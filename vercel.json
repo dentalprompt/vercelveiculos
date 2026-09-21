@@ -3,7 +3,7 @@
   "trailingSlash": false,
   "functions": {
     "api/**/*.js": {
-      "maxDuration": 10
+      "maxDuration": 30
     }
   },
   "rewrites": [
@@ -41,11 +41,11 @@
     },
     {
       "source": "/api/catalog/items",
-      "destination": "/catalog-api-items"
+      "destination": "/api/catalog?action=items"
     },
     {
       "source": "/api/catalog/detail",
-      "destination": "/catalog-api-detail"
+      "destination": "/api/catalog?action=detail"
     },
     {
       "source": "/fatura",
