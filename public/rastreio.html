@@ -396,6 +396,8 @@
       let mapRequest = 0;
       let animationFrame = null;
       let saveAnimationProgress = () => {};
+      // Duas horas para percorrer metade do trajeto; o avanço é salvo no navegador.
+      const TRACKING_HALF_ROUTE_DURATION_MS = 7_200_000;
       const trackingAnimationMemory = new Map();
       window.addEventListener("pagehide", () => saveAnimationProgress());
       document.addEventListener("visibilitychange", () => {
@@ -858,7 +860,7 @@
             const delta = previous === null ? 0 : Math.min(timestamp - previous, 100);
             previous = timestamp;
             if (!animationPaused && !document.hidden) {
-              progress = Math.min(0.5, progress + delta / 7200000);
+              progress = Math.min(0.5, progress + delta / TRACKING_HALF_ROUTE_DURATION_MS);
               simulatedMarker.setLatLng(interpolate(progress));
             }
             if (timestamp - lastSaved >= 5000 || progress >= 0.5) {

@@ -6280,8 +6280,26 @@ h1, h2, h3 { letter-spacing: -0.025em; }
 .safra-back { color: #10335e; }
 .hero-instagram__logo { width: 66px; height: 44px; flex-basis: 66px; border-radius: 0; }
 .safra-header img { width: 190px; height: 90px; }
-.floating-whatsapp, .whatsapp-btn, .social-row a[aria-label="WhatsApp"], .social-row a[aria-label="Instagram"], .social-row a[aria-label="Facebook"] { display: none !important; }
+.social-row a[aria-label="Instagram"], .social-row a[aria-label="Facebook"] { display: none !important; }
+.floating-whatsapp, .whatsapp-btn { display: flex !important; align-items: center; justify-content: center; }
+
+/* Refinamento visual da nova identidade. */
+.home-page .hero { min-height: 650px; }
+.home-page .hero-media img { filter: saturate(.92) contrast(1.06); object-position: center 54%; }
+.home-page .hero-overlay { background: linear-gradient(90deg, rgba(4, 20, 48, .94) 0%, rgba(6, 42, 82, .72) 46%, rgba(6, 30, 67, .12) 100%); }
+.hero-copy { padding: 34px; border: 1px solid rgba(255,255,255,.14); border-radius: 24px; background: rgba(4, 24, 53, .28); box-shadow: 0 24px 70px rgba(0,0,0,.24); backdrop-filter: blur(5px); }
+.hero-copy h1 span { color: var(--brand-lime); }
+.button-primary, .home-search__submit { background: linear-gradient(135deg, var(--brand-blue), #0752a2); box-shadow: 0 10px 26px rgba(8,105,197,.24); }
+.button-primary:hover, .home-search__submit:hover { background: linear-gradient(135deg, #0b75d5, #0a5db3); transform: translateY(-1px); }
+.product-card { border: 1px solid rgba(8,105,197,.12); box-shadow: 0 12px 34px rgba(6,30,67,.09); transition: transform .2s ease, box-shadow .2s ease; }
+.product-card:hover { transform: translateY(-4px); box-shadow: 0 20px 44px rgba(6,30,67,.15); }
+.home-search--wide { border-top: 4px solid var(--brand-lime); box-shadow: 0 22px 55px rgba(6,30,67,.13); }
+.floating-whatsapp { filter: drop-shadow(0 10px 15px rgba(11,97,47,.3)); }
+.floating-whatsapp:hover { transform: translateY(-3px) scale(1.04); }
+.product-card .whatsapp-btn { border-radius: 12px; background: #eaf9ef !important; }
 @media (max-width: 640px) {
+  .home-page .hero { min-height: auto; }
+  .hero-copy { padding: 22px 18px; border-radius: 18px; }
   .brand-logo { height: 62px; max-width: 135px; }
   .footer-logo { width: 230px; }
   .admin-login__brand img { height: 65px; }
