@@ -26,5 +26,7 @@ try{
  result=await adminCall(employee,{id:first.id,status:'Em inspeção',animationPaused:false});assert.equal(result.status,200);assert.equal(result.tracking.animation_paused,false);assert(result.tracking.animation_running_since);
  const [resumedA,resumedB]=await Promise.all([browserCall(customer),browserCall(customer)]);for(const browser of [resumedA,resumedB]) assert.equal(browser.trackings.find(x=>x.id===first.id).animation_paused,false);
  assert.equal(resumedA.trackings.find(x=>x.id===second.id).animation_paused,false);
- console.log('PASS dois navegadores, pausa/retomada sem recarga, status livre, progresso preservado e rastreios independentes');
+ result=await adminCall(employee,{id:first.id,status:'Em inspeção',animationReset:true});assert.equal(result.status,200);assert.equal(result.tracking.animation_paused,true);assert.equal(Number(result.tracking.animation_progress),0);assert.equal(result.tracking.animation_running_since,null);assert.equal(result.tracking.alert_message,'Em inspeção');
+ const resetBrowser=await browserCall(customer);const resetTracking=resetBrowser.trackings.find(x=>x.id===first.id);assert.equal(Number(resetTracking.animation_progress),0);assert.equal(resetTracking.animation_paused,true);assert.equal(resetTracking.animation_running_since,null);
+ console.log('PASS dois navegadores, pausa/retomada sem recarga, status livre, progresso preservado, reinício individual e rastreios independentes');
 } finally {await pool.query('delete from public.app_client_tracking where owner_id=$1',[ids[0]]).catch(()=>{});await pool.query('delete from public.app_users where id=any($1::uuid[])',[ids]).catch(()=>{});await pool.end();}

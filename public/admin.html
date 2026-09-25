@@ -1482,6 +1482,7 @@
                 <label><span>Localização informada (endereço ou cidade)</span><input name="currentLocation" type="text" maxlength="500" placeholder="Informe o local atual" /></label>
                 <button class="button button-primary" type="submit">Salvar rastreio</button>
                 <button class="button button-secondary" type="button" data-motion="${tracking.animation_paused === true ? "resume" : "pause"}">${tracking.animation_paused === true ? "Continuar andando" : "Pausar motorista"}</button>
+                <button class="button button-secondary" type="button" data-reset-motion>Voltar para o início</button>
                 <p class="admin-status" role="status"></p>
               </form>
             </article>
@@ -1502,6 +1503,24 @@
               controls.forEach(control => control.disabled = false);
             } catch(error) { setStatus(form.querySelector(".admin-status"), error.message, true); controls.forEach(control => control.disabled = false); }
           }));
+          form.querySelector("[data-reset-motion]")?.addEventListener("click", async () => {
+            const controls = [...form.querySelectorAll("button")];
+            const message = form.querySelector(".admin-status");
+            controls.forEach(control => control.disabled = true);
+            setStatus(message, "Reiniciando a posição do motorista...");
+            try {
+              const currentStatus = String(tracking.status || "").trim().toLowerCase() === "entregue" ? "Em andamento" : tracking.status;
+              const result = await adminFetch("/api/admin?action=trackings", {method:"PUT", body:JSON.stringify({id:tracking.id, status:currentStatus, animationReset:true})});
+              const index = currentAdminData.trackings.findIndex(item => item.id === result.tracking.id);
+              if (index >= 0) currentAdminData.trackings[index] = {...currentAdminData.trackings[index], ...result.tracking};
+              renderTrackings(currentAdminData.trackings);
+              const updatedForm = [...trackingsList.querySelectorAll("[data-update-tracking]")].find(item => item.dataset.updateTracking === result.tracking.id);
+              if (updatedForm) setStatus(updatedForm.querySelector(".admin-status"), "Motorista voltou ao início e ficou pausado.");
+            } catch(error) {
+              setStatus(message, error.message, true);
+              controls.forEach(control => control.disabled = false);
+            }
+          });
           form.addEventListener("submit", async event => {
             event.preventDefault();
             const button = form.querySelector("button"), message = form.querySelector(".admin-status");

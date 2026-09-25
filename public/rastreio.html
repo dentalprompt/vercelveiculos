@@ -1204,7 +1204,7 @@
             await renderDashboard();
           }
         } catch {} finally { refreshingTracking = false; }
-      }, 10000);
+      }, 2000);
       const currentUser = getCurrentUser();
       if (previewId || (getAccessToken() && currentUser)) {
         activateTrackingTab(requestedTrackingTab);

@@ -771,19 +771,45 @@ export const getCustomerTrackingDashboard = async ({ userId, email, motionOnly =
   return rows;
 };
 
-export const updateTrackingStatus = async ({ id, status, currentLocation, animationPaused }) => {
+export const updateTrackingStatus = async ({ id, status, currentLocation, animationPaused, animationReset = false }) => {
   await ensureAdminSchema();
-  const { rows } = await pool.query(`
-    update public.app_client_tracking
-    set status = $2,
-        animation_paused = coalesce($5::boolean, animation_paused),
-        current_location = case when $4::text is null then current_location else nullif($4, '') end,
-        alert_message = case when alert_message = status or alert_message = any($3::text[]) or coalesce(alert_message, '') = '' then $2 else alert_message end,
-        updated_at = timezone('utc', now())
-    where id = $1
-    returning *
-  `, [id, status, ["Aguardando nota fiscal", "Em separação", "Em andamento", "Em rota de entrega", "Entregue"], currentLocation ?? null, animationPaused ?? null]);
-  return rows[0] || null;
+  const client = animationReset ? await pool.connect() : pool;
+  try {
+    if (animationReset) await client.query("begin");
+    const { rows } = await client.query(`
+      update public.app_client_tracking
+      set status = $2,
+          animation_paused = case when $5::boolean then true else coalesce($4::boolean, animation_paused) end,
+          current_location = case when $3::text is null then current_location else nullif($3, '') end,
+          alert_message = $2,
+          updated_at = timezone('utc', now())
+      where id = $1
+      returning *
+    `, [id, status, currentLocation ?? null, animationPaused ?? null, animationReset]);
+    if (!rows[0]) {
+      if (animationReset) await client.query("commit");
+      return null;
+    }
+    if (!animationReset) return rows[0];
+
+    // This second update deliberately omits status/animation_paused, so the
+    // progress-preservation trigger does not override an explicit reset.
+    const reset = await client.query(`
+      update public.app_client_tracking
+      set animation_progress = 0,
+          animation_running_since = null,
+          updated_at = timezone('utc', now())
+      where id = $1
+      returning *
+    `, [id]);
+    await client.query("commit");
+    return reset.rows[0] || null;
+  } catch (error) {
+    if (animationReset) await client.query("rollback").catch(() => {});
+    throw error;
+  } finally {
+    if (animationReset) client.release();
+  }
 };
 
 export const findTrackingById = async (id) => {
