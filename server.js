@@ -1,3 +1,4 @@
+import adminApiHandler from "./api/admin.js";
 import { publicOrigin } from "./public/shared/public-links.js";
 import dotenv from "dotenv";
 import express from "express";
@@ -29,7 +30,8 @@ import {
   getAdminDashboardData,
   listPublicCatalogItems,
   updateCatalogItem,
-  updateDriver
+  updateDriver,
+  updateTrackingStatus
 } from "./src/admin/repository.js";
 import {
   createInvoice,
@@ -276,6 +278,18 @@ app.post("/api/auth/login", async (req, res) => {
     console.error(error);
     return res.status(500).json({ message: "Erro ao fazer login." });
   }
+});
+
+// Keep local and serverless staff permissions identical.
+app.use("/api/admin", (req,res) => {
+  const parts=req.path.split("/").filter(Boolean);
+  const action=parts[0] === "invoices" && parts[2] === "sync" ? "invoices-sync" : parts[0];
+  const query=new URLSearchParams(req.originalUrl.split("?")[1] || "");
+  if(action) query.set("action",action);
+  if(parts[1]) query.set("id",parts[1]);
+  req.url="/api/admin?"+query.toString();
+  // Express exposes query as a getter. Use a plain request facade for serverless helpers.
+  return adminApiHandler({method:req.method,headers:req.headers,body:req.body,url:req.url,query:Object.fromEntries(query),socket:req.socket},res);
 });
 
 app.post("/api/admin/session", async (req, res) => {
@@ -977,6 +991,17 @@ app.post("/api/admin/yards", adminRequired, async (req, res) => {
   }
 });
 
+app.put(["/api/admin", "/api/admin/trackings"], adminRequired, async (req, res) => {
+  try {
+    const {id, status: rawStatus, currentLocation, animationPaused} = req.body;
+    const status = typeof rawStatus === "string" ? rawStatus.trim() : "";
+    if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(String(id || "")) || !status || status.length > 120 || (animationPaused !== undefined && typeof animationPaused !== "boolean")) return res.status(400).json({message:"Informe um rastreio e status válidos."});
+    const tracking = await updateTrackingStatus({id,status,animationPaused,currentLocation:currentLocation === undefined ? undefined : String(currentLocation).trim().slice(0,500)});
+    if(!tracking) return res.status(404).json({message:"Rastreio não encontrado."});
+    res.json({tracking});
+  } catch(error) { res.status(500).json({message:"Não foi possível atualizar o rastreio."}); }
+});
+
 app.post("/api/admin/trackings", adminRequired, async (req, res) => {
   try {
     const {
@@ -1094,9 +1119,12 @@ app.get("/api/customer/tracking-dashboard", authRequired, async (req, res) => {
   try {
     const trackings = await getCustomerTrackingDashboard({
       userId: req.user.id,
-      email: req.user.email
+      email: req.user.email,
+      motionOnly: req.query.motion === "1"
     });
 
+    res.setHeader("Cache-Control", "private, no-store, max-age=0");
+    if (req.query.motion === "1") return res.json({trackings});
     return res.json({
       user: sanitizeUser(req.user),
       trackings

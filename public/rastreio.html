@@ -369,17 +369,20 @@
       const fetchRoadRoute = async (origin, destination) => {
         const key = [origin, destination].map(point => `${point[1]},${point[0]}`).join(";");
         if (roadRouteCache.has(key)) return roadRouteCache.get(key);
+        for (const service of ["https://router.project-osrm.org", "https://routing.openstreetmap.de/routed-car"]) {
         try {
-          const response = await fetch(`https://router.project-osrm.org/route/v1/driving/${key}?overview=full&geometries=geojson&steps=false`, {signal: AbortSignal.timeout(8000)});
-          if (!response.ok) return null;
+          const response = await fetch(`${service}/route/v1/driving/${key}?overview=full&geometries=geojson`, {signal: AbortSignal.timeout(8000)});
+          if (!response.ok) continue;
           const data = await response.json();
           const coordinates = data.routes?.[0]?.geometry?.coordinates;
-          if (data.code !== "Ok" || !Array.isArray(coordinates) || coordinates.length < 2 || !coordinates.every(point => Array.isArray(point) && Number.isFinite(point[0]) && Number.isFinite(point[1]))) return null;
+          if (data.code !== "Ok" || !Array.isArray(coordinates) || coordinates.length < 2 || !coordinates.every(point => Array.isArray(point) && Number.isFinite(point[0]) && Number.isFinite(point[1]))) continue;
           const route = coordinates.map(([lng, lat]) => [lat, lng]);
           if (roadRouteCache.size >= 20) roadRouteCache.clear();
           roadRouteCache.set(key, route);
           return route;
-        } catch (_) { return null; }
+        } catch (_) { /* Try the alternative road routing service. */ }
+        }
+        return null;
       };
       const routeInterpolator = coordinates => {
         const lengths = [0];
@@ -395,15 +398,23 @@
       };
       let mapRequest = 0;
       let animationFrame = null;
-      let saveAnimationProgress = () => {};
-      // Duas horas para percorrer metade do trajeto; o avanço é salvo no navegador.
-      const TRACKING_HALF_ROUTE_DURATION_MS = 7_200_000;
-      const trackingAnimationMemory = new Map();
-      window.addEventListener("pagehide", () => saveAnimationProgress());
-      document.addEventListener("visibilitychange", () => {
-        if (document.hidden) saveAnimationProgress();
-      });
+      // Server timestamps avoid depending on the clock or storage of each device.
+      const trackingTimeline = tracking => {
+        const stored = Math.max(0, Math.min(1, Number(tracking.animation_progress) || 0));
+        const serverNow = Date.parse(tracking.animation_server_time);
+        const started = Date.parse(tracking.animation_running_since);
+        const received = tracking.animation_received_at ?? performance.now();
+        const elapsed = Number.isFinite(serverNow) && Number.isFinite(started)
+          ? Math.max(0, serverNow - started + performance.now() - received) : 0;
+        return stored >= 0.5 ? stored : Math.min(0.5, stored + elapsed / 7200000);
+      };
+      const stampTimelines = data => {
+        data.trackings.forEach(tracking => { tracking.animation_received_at = performance.now(); });
+        return data;
+      };
+      const trackingStateSignature = trackings => JSON.stringify(trackings.map(({animation_server_time, animation_received_at, ...tracking}) => tracking));
       let animationPaused = false;
+      let applyTrackingMotion = () => {};
       const animationNotice = document.getElementById("trackingAnimationNotice");
       let profilePhotoBase64 = "";
       let requestedTrackingTab = new URLSearchParams(window.location.search).get("tab") || "overview";
@@ -482,7 +493,7 @@
           headers.Authorization = `Bearer ${accessToken}`;
         }
 
-        const response = await fetch(url, { ...options, headers });
+        const response = await fetch(url, { cache: "no-store", ...options, headers });
         const data = await response.json().catch(() => ({}));
         if (!response.ok) {
           throw new Error(data.message || "Erro ao carregar dados.");
@@ -513,7 +524,21 @@
         return true;
       };
 
-      const geocodeAddress = async (address) => {
+      const geocodeCache = new Map();
+      const approximateMapAddresses = new Set();
+      const normalizeMapText = value => String(value || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/\bluiz\b/g, "luis").replace(/[^a-z0-9]+/g, " ").trim();
+      const geocodeAddress = async address => {
+        const key = String(address || "").trim();
+        if (!key) return null;
+        if (!geocodeCache.has(key)) {
+          geocodeCache.set(key, resolveMapAddress(key).then(result => {
+            if (!result) geocodeCache.delete(key);
+            return result;
+          }));
+        }
+        return geocodeCache.get(key);
+      };
+      const resolveMapAddress = async (address) => {
         const rawAddress = String(address || "").trim();
         if (!rawAddress) {
           return null;
@@ -522,18 +547,47 @@
         const cleanAddress = rawAddress.replace(/\bCEP\s*/gi, "").replace(/,\s*São Paulo\s*-\s*SP$/i, "");
         const baseCandidates = [cleanAddress, rawAddress];
         const postalCode = rawAddress.match(/\b\d{5}-?\d{3}\b/);
+        let postalAddress = null;
         if (postalCode) {
           try {
             const postal = await lookupCep(postalCode[0]);
+            postalAddress = postal;
             baseCandidates.push([postal.logradouro, postal.bairro, postal.localidade, postal.uf, "Brasil"].filter(Boolean).join(", "));
           } catch (_) { /* Keep searching the supplied address. */ }
+        }
+
+        // Postal data constrains the municipality: never accept a namesake in another city.
+        if (postalAddress?.logradouro && postalAddress?.localidade) {
+          const street = postalAddress.logradouro;
+          const city = postalAddress.localidade;
+          const variants = [...new Set([`${street} ${city}`, street, `${street.replace(/Luiz/gi, "Luis")} ${city}`])];
+          for (const query of variants) {
+            try {
+              const response = await fetch(`https://photon.komoot.io/api/?limit=10&q=${encodeURIComponent(query)}`, {signal: AbortSignal.timeout(6000)});
+              if (!response.ok) continue;
+              const data = await response.json();
+              const match = (data.features || []).find(feature => {
+                const props = feature.properties || {};
+                const coords = feature.geometry?.coordinates;
+                return props.countrycode === "BR" && normalizeMapText(props.city) === normalizeMapText(city)
+                  && normalizeMapText(props.street || props.name) === normalizeMapText(street)
+                  && ["street", "house"].includes(props.type) && coords?.length >= 2 && coords.every(Number.isFinite);
+              });
+              if (match) {
+                approximateMapAddresses.add(rawAddress);
+                return [match.geometry.coordinates[1], match.geometry.coordinates[0]];
+              }
+            } catch (_) { /* Retry another spelling of the same street. */ }
+          }
+          // Do not fall back to an unrestricted search that may select another city.
+          return null;
         }
 
         const candidates = [...new Set(baseCandidates.map((item) => item.trim()).filter(Boolean))];
 
         for (const candidate of candidates) {
           try {
-            const response = await fetch(`https://nominatim.openstreetmap.org/search?format=jsonv2&limit=1&q=${encodeURIComponent(candidate)}`);
+            const response = await fetch(`https://nominatim.openstreetmap.org/search?format=jsonv2&limit=1&q=${encodeURIComponent(candidate)}`, {signal: AbortSignal.timeout(6000)});
             const data = await response.json();
             if (Array.isArray(data) && data.length) {
               return [Number(data[0].lat), Number(data[0].lon)];
@@ -557,9 +611,8 @@
       };
 
       const clearMapLayers = () => {
-        saveAnimationProgress();
-        saveAnimationProgress = () => {};
         mapRequest += 1;
+        applyTrackingMotion = () => {};
         cancelAnimationFrame(animationFrame);
         animationFrame = null;
         animationNotice.hidden = true;
@@ -649,7 +702,7 @@
                       </div>
                       <div class="tracking-vehicle-card__copy">
                         <strong>${tracking.item_name || "Veículo"}</strong>
-                        <span>Status: ${(tracking.alert_message || tracking.status || "Sem status").toUpperCase()}</span>
+                        <span>Status: ${escapeTrackingText((tracking.alert_message || tracking.status || "Sem status").toUpperCase())}</span>
                       </div>
                       <div class="tracking-vehicle-card__arrow">&gt;</div>
                     </div>
@@ -732,16 +785,17 @@
         `;
       };
 
+      const escapeTrackingText = value => String(value).replace(/[&<>"']/g, char => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[char]));
       const waitingAtYard = tracking => String(tracking.status || "").toLowerCase().includes("aguardando nota fiscal");
       const yardAddress = tracking => tracking.yard_address || "R. Jussara, 800 - Jardim Santa Cecilia - Barueri - SP";
-      const reportedLocation = tracking => waitingAtYard(tracking) ? `No pátio — ${tracking.yard_name || "VERCEL VEÍCULOS E MAQUINÁRIOS"}: ${yardAddress(tracking)}` : tracking.current_location;
+      const reportedLocation = tracking => tracking.current_location || `No pátio — ${tracking.yard_name || "VERCEL VEÍCULOS E MAQUINÁRIOS"}: ${yardAddress(tracking)}`;
       const renderMap = async (tracking, user) => {
         ensureMap();
         clearMapLayers();
         const request = mapRequest;
 
         const startAddress = yardAddress(tracking);
-        const currentAddress = waitingAtYard(tracking) ? startAddress : tracking.current_location || "";
+        const currentAddress = tracking.current_location || startAddress;
         const profileAddress = buildUserAddress(user);
         const destinationAddress = tracking.destination_address || profileAddress || "Destino final não informado";
 
@@ -752,6 +806,9 @@
         ]);
 
         if (request !== mapRequest) return;
+        if ([startAddress, currentAddress, destinationAddress].some(address => approximateMapAddresses.has(address))) {
+          trackingMapMeta.textContent += " Pontos aproximados no logradouro; o mapa não confirmou os números dos imóveis.";
+        }
         const points = [startCoords, currentCoords, destinationCoords].filter(Boolean);
         if (!points.length) { map.setView([-23.5505, -46.6333], 6); return; }
 
@@ -825,55 +882,42 @@
         if (!destinationCoords) issues.push("Endereço de entrega não localizado no mapa.");
         if (!origin) issues.push("Endereço de origem não localizado no mapa.");
         if (issues.length) trackingMapMeta.textContent += " " + issues.join(" ");
-        // Progress belongs to the delivery and route, never to its status.
-        const progressKey = `vercel_tracking_demo_v2:${tracking.id}`;
-        const legacyProgressKey = `prime_tracking_demo_v2:${tracking.id}`;
-        const routeKey = JSON.stringify([routeOrigin, destinationCoords]);
-        let savedProgress = trackingAnimationMemory.get(progressKey);
-        if (!savedProgress) {
-          try { savedProgress = JSON.parse(localStorage.getItem(progressKey) || localStorage.getItem(legacyProgressKey) || "null"); } catch {}
-        }
-        let progress = savedProgress?.routeKey === routeKey && Number.isFinite(savedProgress.progress)
-          ? Math.max(0, Math.min(0.5, savedProgress.progress)) : 0;
+        let progress = trackingTimeline(tracking);
+        if (delivered) progress = 1;
         const interpolate = routePoints.length >= 2 ? routeInterpolator(routePoints) : null;
-        if (!delivered && !waitingAtYard(tracking) && driverMarker && interpolate && progress > 0) {
+        if (!delivered && driverMarker && interpolate && progress > 0) {
           driverMarker.setLatLng(interpolate(progress));
           animationNotice.hidden = false;
           driverMarker.getElement()?.querySelector(".tracking-map-driver-marker")?.classList.add("is-demo-waiting");
         }
-        if (moving && origin && destinationCoords && (origin[0] !== destinationCoords[0] || origin[1] !== destinationCoords[1])) {
-          animationNotice.hidden = false;
+        if (origin && destinationCoords && (origin[0] !== destinationCoords[0] || origin[1] !== destinationCoords[1])) {
           const simulatedMarker = driverMarker || L.marker(origin, {icon: driverIcon, zIndexOffset: 1100}).addTo(map);
-          simulatedMarker.bindPopup("Em rota · Demonstrando");
           if (!driverMarker) mapMarkers.push(simulatedMarker);
-          animationPaused = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-          let previous = null, lastSaved = 0;
-          saveAnimationProgress = () => {
-            const state = {routeKey, progress};
-            trackingAnimationMemory.set(progressKey, state);
-            try { localStorage.setItem(progressKey, JSON.stringify(state)); } catch {}
+          simulatedMarker.bindPopup("Em rota · Demonstrando");
+          const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+          const paintMotion = () => {
+            progress = trackingTimeline(tracking);
+            simulatedMarker.setLatLng(interpolate(progress));
+            animationNotice.hidden = progress >= 1 || !(progress > 0 || tracking.animation_running_since || tracking.animation_paused !== null && tracking.animation_paused !== undefined);
+            simulatedMarker.getElement()?.querySelector(".tracking-map-driver-marker")?.classList.toggle("is-demo-waiting", !animationNotice.hidden);
           };
-          simulatedMarker.setLatLng(interpolate(progress));
-          simulatedMarker.getElement()?.querySelector(".tracking-map-driver-marker")?.classList.add("is-demo-waiting");
-          const animate = timestamp => {
+          const animate = () => {
+            animationFrame = null;
             if (request !== mapRequest) return;
-            const delta = previous === null ? 0 : Math.min(timestamp - previous, 100);
-            previous = timestamp;
-            if (!animationPaused && !document.hidden) {
-              progress = Math.min(0.5, progress + delta / TRACKING_HALF_ROUTE_DURATION_MS);
-              simulatedMarker.setLatLng(interpolate(progress));
-            }
-            if (timestamp - lastSaved >= 5000 || progress >= 0.5) {
-              saveAnimationProgress();
-              lastSaved = timestamp;
-            }
-            if (progress >= 0.5) {
-              simulatedMarker.getElement()?.querySelector(".tracking-map-driver-marker")?.classList.add("is-demo-waiting");
-              simulatedMarker.bindPopup("Em rota · Demonstrando • Aguardando atualização do status");
-            }
-            animationFrame = progress < 0.5 ? requestAnimationFrame(animate) : null;
+            if (!document.hidden) paintMotion();
+            if (!animationPaused && !reducedMotion.matches && tracking.animation_running_since && progress < 0.5) animationFrame = requestAnimationFrame(animate);
           };
-          animationFrame = requestAnimationFrame(animate);
+          applyTrackingMotion = next => {
+            if (next.id !== tracking.id || request !== mapRequest) return;
+            if (Date.parse(next.updated_at) < Date.parse(tracking.updated_at)) return;
+            Object.assign(tracking, next);
+            animationPaused = tracking.animation_paused === true;
+            cancelAnimationFrame(animationFrame);
+            animationFrame = null;
+            paintMotion();
+            if (!animationPaused && !reducedMotion.matches && tracking.animation_running_since && progress < 0.5) animationFrame = requestAnimationFrame(animate);
+          };
+          applyTrackingMotion(tracking);
         }
       };
 
@@ -946,7 +990,7 @@
         try {
           const data = await apiFetch(previewId ? `/api/admin?action=tracking-preview&id=${encodeURIComponent(previewId)}` : "/api/customer/tracking-dashboard");
           if (previewId) data.trackings = data.trackings.filter(item => item.id === previewId);
-          dashboardState = data;
+          dashboardState = stampTimelines(data);
           selectedTrackingId = previewId || data.trackings[0]?.id || null;
           setLoggedInState();
           activateTrackingTab(requestedTrackingTab);
@@ -1130,6 +1174,37 @@
         trackingProfileForm.querySelectorAll("input, button, textarea, select").forEach(input => { input.disabled = true; });
         trackingLogoutButton.textContent = "Voltar ao painel";
       }
+      let refreshingMotion = false;
+      const refreshTrackingMotion = async () => {
+        if (refreshingMotion || document.hidden || !getAccessToken() || !dashboardState) return;
+        refreshingMotion = true;
+        try {
+          const url = previewId ? `/api/admin?action=tracking-preview&id=${encodeURIComponent(previewId)}&motion=1` : "/api/customer/tracking-dashboard?motion=1";
+          const data = stampTimelines(await apiFetch(url, {signal: AbortSignal.timeout(8000)}));
+          for (const next of data.trackings) {
+            const current = dashboardState.trackings.find(item => item.id === next.id);
+            if (!current || Date.parse(next.updated_at) < Date.parse(current.updated_at)) continue;
+            applyTrackingMotion(next);
+            Object.assign(current, next);
+          }
+        } catch {} finally { refreshingMotion = false; }
+      };
+      setInterval(refreshTrackingMotion, 1000);
+      document.addEventListener("visibilitychange", () => { if (!document.hidden) refreshTrackingMotion(); });
+      window.addEventListener("focus", refreshTrackingMotion);
+      let refreshingTracking = false;
+      setInterval(async () => {
+        if (refreshingTracking || document.hidden || !getAccessToken() || !dashboardState) return;
+        refreshingTracking = true;
+        try {
+          const data = await apiFetch(previewId ? `/api/admin?action=tracking-preview&id=${encodeURIComponent(previewId)}` : "/api/customer/tracking-dashboard");
+          if (previewId) data.trackings = data.trackings.filter(item => item.id === previewId);
+          if (trackingStateSignature(data.trackings) !== trackingStateSignature(dashboardState.trackings)) {
+            dashboardState = stampTimelines(data);
+            await renderDashboard();
+          }
+        } catch {} finally { refreshingTracking = false; }
+      }, 10000);
       const currentUser = getCurrentUser();
       if (previewId || (getAccessToken() && currentUser)) {
         activateTrackingTab(requestedTrackingTab);
