@@ -1,4 +1,5 @@
 import { findPublicCatalogItemBySlug, listPublicCatalogItems } from "../src/admin/repository.js";
+import { listPublicStaffContacts } from "../src/admin/staff.js";
 import { getQueryParam, handleOptions, sendJson } from "./_lib/http.js";
 
 export default async function handler(req, res) {
@@ -26,6 +27,11 @@ export default async function handler(req, res) {
       const item = await findPublicCatalogItemBySlug(slug);
       if (!item) return sendJson(req, res, 404, { message: "Item não encontrado." });
       return sendJson(req, res, 200, { item });
+    }
+
+    if (action === "contacts") {
+      res.setHeader("Cache-Control", "public, max-age=30, s-maxage=30");
+      return sendJson(req, res, 200, { contacts: await listPublicStaffContacts() });
     }
 
     return sendJson(req, res, 404, { message: "Rota do catálogo não encontrada." });

@@ -13,6 +13,12 @@ export const assertOwned = async (actor, kind, id) => {
   return record;
 };
 export const listStaff = async () => (await pool.query("select id,full_name,email,whatsapp,photo_url,is_active,created_at from public.app_users where role='employee' order by created_at desc")).rows;
+export const listPublicStaffContacts = async () => (await pool.query(`
+  select id, full_name, whatsapp, photo_url
+  from public.app_users
+  where role='employee' and is_active=true and nullif(trim(whatsapp),'') is not null
+  order by full_name asc
+`)).rows;
 export const saveStaff = async ({id,fullName,email,whatsapp,password,photoUrl,isActive}) => {
   const normalizedWhatsapp = typeof whatsapp === 'string' ? whatsapp.trim().slice(0, 30) : null;
   const normalizedPhoto = typeof photoUrl === 'string' ? photoUrl.trim() : photoUrl === null ? '' : null;

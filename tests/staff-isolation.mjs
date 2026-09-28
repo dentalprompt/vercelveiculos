@@ -8,17 +8,20 @@ const {ensureInvoiceSchema,createInvoice}=await import('../src/invoices/reposito
 const {ensureContractSchema}=await import('../src/contracts/repository.js');
 const {hashPassword,signAccessToken}=await import('../src/auth/security.js');
 const {default:handler}=await import('../api/admin.js');
+const {default:catalogHandler}=await import('../api/catalog.js');
 const prefix='staff-test-'+randomUUID();const users=[];const yards=[];
 async function call(actor,action,method='GET',body={},query={}){
  const req={method,body,headers:actor?{authorization:'Bearer '+signAccessToken(actor)}:{},query:{action,...query},url:'/api/admin',socket:{remoteAddress:'127.0.0.1'}};
  const res={statusCode:200,setHeader(){},end(s){this.body=JSON.parse(s)}};
  await handler(req,res);return {status:res.statusCode,...res.body};
 }
+async function publicContacts(){const req={method:'GET',headers:{},query:{action:'contacts'},url:'/api/catalog?action=contacts'};const res={statusCode:200,setHeader(){},end(s){this.body=JSON.parse(s)}};await catalogHandler(req,res);return {status:res.statusCode,...res.body};}
 try{
  await ensureAdminSchema();await Promise.all([ensureInvoiceSchema(),ensureContractSchema()]);
  const root=(await pool.query("select * from public.app_users where role='admin' limit 1")).rows[0];assert(root);
  let r=await call(root,'staff','POST',{fullName:'Employee A',email:prefix+'a@example.test',whatsapp:'11999990001',photoUrl:'data:image/png;base64,dGVzdGU=',password:'testpass123'});assert.equal(r.status,201,JSON.stringify(r));const a=r.staff;users.push(a.id);assert.equal(a.whatsapp,'11999990001');assert.match(a.photo_url,/^data:image\/png;base64,/);
  r=await call(root,'staff','POST',{fullName:'Employee B',email:prefix+'b@example.test',whatsapp:'11999990002',password:'testpass123'});assert.equal(r.status,201,JSON.stringify(r));const b=r.staff;users.push(b.id);
+ const publicStaff=await publicContacts();assert.equal(publicStaff.status,200);assert.deepEqual(publicStaff.contacts.map(x=>x.id).sort(),[a.id,b.id].sort());assert.deepEqual(Object.keys(publicStaff.contacts[0]).sort(),['full_name','id','photo_url','whatsapp']);
  assert.equal((await call(a,'staff')).status,403);
  assert.equal((await call(a,'staff','POST',{fullName:'Escalation',email:'x@example.test',password:'testpass123'})).status,403);
  r=await call(null,'session','POST',{email:a.email,password:'testpass123'});assert.equal(r.status,200,JSON.stringify(r));
@@ -46,7 +49,7 @@ try{
  const changedYard=await call(b,'yards','PUT',{id:r.yard.id,name:prefix+' edited',address:'New shared address'});assert.equal(changedYard.status,200);assert.equal((await call(a,'dashboard')).yards.find(x=>x.id===r.yard.id).address,'New shared address');
  assert((await call(root,'dashboard')).users.some(x=>x.id===c1.user.id));assert((await call(root,'contracts')).contracts.some(x=>x.id===contract.id));
  assert.equal((await call(c1.user,'dashboard')).status,403);
- r=await call(root,'staff','PUT',{id:a.id,isActive:false});assert.equal(r.status,200);assert.equal((await call(a,'dashboard')).status,403);assert.equal((await call(null,'session','POST',{email:a.email,password:'testpass123'})).status,403);
+ r=await call(root,'staff','PUT',{id:a.id,isActive:false});assert.equal(r.status,200);assert.equal((await call(a,'dashboard')).status,403);assert.equal((await call(null,'session','POST',{email:a.email,password:'testpass123'})).status,403);assert(!(await publicContacts()).contacts.some(x=>x.id===a.id));
  console.log('PASS staff login, owner assignment, all lists, foreign IDs, preview, shared yards/catalog, admin visibility, disabled access and customer denial');
 }finally{
  for(const table of ['app_contracts','app_invoices','app_client_tracking'])await pool.query(`delete from public.${table} where owner_id=any($1::uuid[])`,[users]);

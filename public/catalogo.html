@@ -168,14 +168,6 @@
             })
           : "Sob consulta";
 
-      const vehicleWhatsApp = () => "";
-      const vehicleWhatsAppUrl = (title) => {
-        const message = title
-          ? `Olá, tenho interesse no veículo ${title} da VERCEL VEÍCULOS E MAQUINÁRIOS.`
-          : "Olá, tenho interesse em um veículo do catálogo da VERCEL VEÍCULOS E MAQUINÁRIOS.";
-        return "./sobre.html#contato";
-      };
-
       const getItemImage = (item) => {
         const galleryImages = Array.isArray(item.gallery_images) ? item.gallery_images : [];
         return galleryImages[0] || item.image_url || "";
@@ -202,7 +194,7 @@
                 <div class="price-block"><strong>${formatCurrency(item.price)}</strong></div>
                 <div class="product-card-actions">
                 <a class="product-view-lot" href="./detalhe.html?slug=${encodeURIComponent(item.slug)}">VER LOTE</a>
-                <a class="whatsapp-btn" href="${vehicleWhatsAppUrl(item.title)}" aria-label="Enviar mensagem pelo WhatsApp"><img src="./whatsapp1.png" alt="" width="36" height="36" loading="lazy" /></a>
+                <button class="whatsapp-btn" type="button" data-staff-contact data-vehicle="${encodeURIComponent(item.title || "")}" aria-label="Escolher funcionário para conversar pelo WhatsApp"><img src="./whatsapp1.png" alt="" width="36" height="36" loading="lazy" /></button>
                 </div>
               </div>
             </div>
@@ -268,6 +260,7 @@
 
       bindProductCards();
     </script>
+  <script src="./staff-contact.js" defer></script>
   <script src="./app-navigation.js" defer></script>
   </body>
 </html>

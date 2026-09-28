@@ -100,7 +100,7 @@
                 </div>
 
                 <div class="detail-actions">
-                  <a class="button button-primary" id="detailBuyButton" href="./sobre.html#contato">Consultar disponibilidade</a>
+                  <button class="button button-primary" id="detailBuyButton" type="button" data-staff-contact>Consultar disponibilidade</button>
                   <a class="button button-secondary" id="detailWhatsappButton" href="./sobre.html#contato">Ver dados da empresa</a>
                 </div>
               </aside>
@@ -245,14 +245,6 @@
             })
           : "Sob consulta";
 
-      const vehicleWhatsApp = () => "";
-      const vehicleWhatsAppUrl = (title) => {
-        const message = title
-          ? `Olá, tenho interesse no veículo ${title} da VERCEL VEÍCULOS E MAQUINÁRIOS.`
-          : "Olá, tenho interesse em um veículo do catálogo da VERCEL VEÍCULOS E MAQUINÁRIOS.";
-        return "./sobre.html#contato";
-      };
-
       const getGallery = (item) => {
         const galleryImages = Array.isArray(item.gallery_images) ? item.gallery_images : [];
         return galleryImages.length ? galleryImages : [item.image_url].filter(Boolean);
@@ -351,7 +343,7 @@
                 </div>
                 <div class="product-card-actions">
                 <a class="product-view-lot" href="./detalhe.html?slug=${encodeURIComponent(item.slug)}">VER LOTE</a>
-                <a class="whatsapp-btn" href="${vehicleWhatsAppUrl(item.title)}" aria-label="Enviar mensagem pelo WhatsApp"><img src="./whatsapp1.png" alt="" width="36" height="36" loading="lazy" /></a>
+                <button class="whatsapp-btn" type="button" data-staff-contact data-vehicle="${encodeURIComponent(item.title || "")}" aria-label="Escolher funcionário para conversar pelo WhatsApp"><img src="./whatsapp1.png" alt="" width="36" height="36" loading="lazy" /></button>
                 </div>
               </div>
             </div>
@@ -385,8 +377,7 @@
           detailBadge.textContent = item.badge || item.category || "Catálogo";
           detailLocation.textContent = item.location || "Local sob consulta";
           detailPrice.textContent = formatCurrency(item.price);
-          detailWhatsappButton.href = vehicleWhatsAppUrl(item.title);
-          detailBuyButton.href = vehicleWhatsAppUrl(item.title);
+          detailBuyButton.dataset.vehicle = encodeURIComponent(item.title || "");
 
           detailThumbs.innerHTML = gallery
             .map(
@@ -427,6 +418,7 @@
 
       loadDynamicDetail();
     </script>
+  <script src="./staff-contact.js" defer></script>
   <script src="./app-navigation.js" defer></script>
   </body>
 </html>

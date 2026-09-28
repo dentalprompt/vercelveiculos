@@ -193,7 +193,7 @@
       </div>
     </footer>
 
-    <a class="floating-whatsapp" href="./sobre.html#contato" aria-label="Ver contato"><img src="./whatsapp1.png" alt="" width="58" height="58" /></a>
+    <button class="floating-whatsapp" type="button" data-staff-contact aria-label="Conversar pelo WhatsApp"><img src="./whatsapp1.png" alt="" width="58" height="58" /></button>
 
     <nav class="mobile-nav" aria-label="Navegação mobile">
       <a class="mobile-nav-item active" href="./index.html">Início</a>
@@ -216,14 +216,6 @@
               currency: "BRL"
             })
           : "Sob consulta";
-
-      const vehicleWhatsApp = () => "";
-      const vehicleWhatsAppUrl = (title) => {
-        const message = title
-          ? `Olá, tenho interesse no veículo ${title} da VERCEL VEÍCULOS E MAQUINÁRIOS.`
-          : "Olá, tenho interesse em um veículo do catálogo da VERCEL VEÍCULOS E MAQUINÁRIOS.";
-        return "./sobre.html#contato";
-      };
 
       const getItemImage = (item) => {
         const galleryImages = Array.isArray(item.gallery_images) ? item.gallery_images : [];
@@ -253,7 +245,7 @@
                 </div>
                 <div class="product-card-actions">
                 <a class="product-view-lot" href="./detalhe.html?slug=${encodeURIComponent(item.slug)}">VER LOTE</a>
-                <a class="whatsapp-btn" href="${vehicleWhatsAppUrl(item.title)}" aria-label="Enviar mensagem pelo WhatsApp"><img src="./whatsapp1.png" alt="" width="36" height="36" loading="lazy" /></a>
+                <button class="whatsapp-btn" type="button" data-staff-contact data-vehicle="${encodeURIComponent(item.title || "")}" aria-label="Escolher funcionário para conversar pelo WhatsApp"><img src="./whatsapp1.png" alt="" width="36" height="36" loading="lazy" /></button>
                 </div>
               </div>
             </div>
@@ -289,6 +281,7 @@
         .catch(() => null)
         .finally(() => bindProductCards());
     </script>
+  <script src="./staff-contact.js" defer></script>
   <script src="./app-navigation.js" defer></script>
   </body>
 </html>

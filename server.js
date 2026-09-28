@@ -55,6 +55,7 @@ import {
 import { getBearerToken } from "./src/auth/request.js";
 import { onlyDigits, sanitizeUser } from "./src/auth/utils.js";
 import { resolveIronCallbackUrl } from "./src/config/ironpay.js";
+import { listPublicStaffContacts } from "./src/admin/staff.js";
 
 dotenv.config();
 
@@ -1114,6 +1115,15 @@ const handleTrackingLookup = async (req, res) => {
 
 app.get("/api/catalog/items", handleCatalogItems);
 app.get("/api/catalog/detail", handleCatalogDetail);
+app.get("/api/catalog/contacts", async (_req, res) => {
+  try {
+    res.setHeader("Cache-Control", "public, max-age=30, s-maxage=30");
+    return res.json({contacts: await listPublicStaffContacts()});
+  } catch(error) {
+    console.error(error);
+    return res.status(500).json({message:"Erro ao carregar contatos."});
+  }
+});
 app.get("/api/tracking", handleTrackingLookup);
 app.get("/api/customer/tracking-dashboard", authRequired, async (req, res) => {
   try {
