@@ -48,6 +48,10 @@
       "destination": "/api/catalog?action=detail"
     },
     {
+      "source": "/api/catalog/contacts",
+      "destination": "/api/catalog?action=contacts"
+    },
+    {
       "source": "/fatura",
       "destination": "/fatura.html"
     },
