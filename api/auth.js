@@ -17,6 +17,7 @@ import {
 } from "../src/auth/security.js";
 import { onlyDigits, sanitizeUser } from "../src/auth/utils.js";
 import { handleOptions, readJsonBody, sendJson, getQueryParam } from "./_lib/http.js";
+import { findActiveStaffById } from "../src/admin/staff.js";
 
 const sendAuthPayload = async (req, res, user) => {
   const accessToken = signAccessToken(user);
@@ -55,7 +56,8 @@ export default async function handler(req, res) {
         complement,
         city,
         state,
-        password
+        password,
+        staffId
       } = await readJsonBody(req);
 
       if (!fullName || !email || !whatsapp || !cpf || !cep || !address || !number || !district || !password) {
@@ -68,6 +70,11 @@ export default async function handler(req, res) {
 
       if (existingUser) {
         return sendJson(req, res, 409, { message: "Já existe uma conta com este e-mail ou CPF." });
+      }
+
+      const selectedStaff = staffId ? await findActiveStaffById(staffId) : null;
+      if (staffId && !selectedStaff) {
+        return sendJson(req, res, 400, { message: "O funcionário selecionado não está disponível. Escolha outro atendimento." });
       }
 
       const passwordHash = await hashPassword(password);
@@ -83,7 +90,8 @@ export default async function handler(req, res) {
         complement: complement ? String(complement).trim() : null,
         city: city ? String(city).trim() : null,
         state: state ? String(state).trim() : null,
-        passwordHash
+        passwordHash,
+        ownerId: selectedStaff?.id || null
       });
 
       return sendAuthPayload(req, res, user);

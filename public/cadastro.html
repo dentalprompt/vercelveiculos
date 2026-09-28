@@ -68,6 +68,20 @@
                 <input id="whatsapp" name="whatsapp" type="tel" inputmode="tel" required />
               </div>
 
+              <fieldset class="register-attendant form-field--full">
+                <legend>Você já foi ou está sendo atendido por alguém?</legend>
+                <div class="register-attendant__answer">
+                  <label><input type="radio" name="has_attendant" value="no" required checked /> Não</label>
+                  <label><input type="radio" name="has_attendant" value="yes" required /> Sim</label>
+                </div>
+                <div class="register-attendant__selection" id="attendantSelection" hidden>
+                  <p>Selecione quem está atendendo você:</p>
+                  <div class="register-attendant__list" id="attendantList" aria-live="polite">
+                    <span>Carregando funcionários...</span>
+                  </div>
+                </div>
+              </fieldset>
+
               <div class="form-field">
                 <label for="cpf">CPF:*</label>
                 <input id="cpf" name="cpf" type="text" inputmode="numeric" maxlength="14" required />
@@ -194,6 +208,9 @@
       const whatsappInput = document.querySelector("#whatsapp");
       const cpfInput = document.querySelector("#cpf");
       const form = document.querySelector("#register-form");
+      const attendantSelection = document.querySelector("#attendantSelection");
+      const attendantList = document.querySelector("#attendantList");
+      let availableAttendants = [];
 
       const onlyDigits = (value) => value.replace(/\D/g, "");
 
@@ -263,11 +280,53 @@
         whatsappInput.value = formatPhone(whatsappInput.value);
       });
 
+      const renderAttendants = () => {
+        attendantList.replaceChildren();
+        if (!availableAttendants.length) {
+          const empty = document.createElement("span");
+          empty.textContent = "Nenhum funcionário está disponível neste momento.";
+          attendantList.append(empty);
+          return;
+        }
+        availableAttendants.forEach(attendant => {
+          const label = document.createElement("label");
+          label.className = "register-attendant-card";
+          const input = document.createElement("input");
+          input.type = "radio";
+          input.name = "staff_id";
+          input.value = attendant.id;
+          const photo = attendant.photo_url ? document.createElement("img") : document.createElement("span");
+          photo.className = `register-attendant-card__photo${attendant.photo_url ? "" : " register-attendant-card__photo--placeholder"}`;
+          if (attendant.photo_url) { photo.src = attendant.photo_url; photo.alt = `Foto de ${attendant.full_name}`; }
+          else photo.textContent = String(attendant.full_name || "V").trim().slice(0, 1).toUpperCase();
+          const name = document.createElement("strong");
+          name.textContent = attendant.full_name;
+          label.append(input, photo, name);
+          attendantList.append(label);
+        });
+      };
+
+      fetch("/api/catalog/contacts")
+        .then(async response => { const data = await response.json(); if (!response.ok) throw new Error(); return data; })
+        .then(data => { availableAttendants = Array.isArray(data.contacts) ? data.contacts : []; renderAttendants(); })
+        .catch(() => { availableAttendants = []; renderAttendants(); });
+
+      form.querySelectorAll('[name="has_attendant"]').forEach(input => input.addEventListener("change", () => {
+        const hasAttendant = form.has_attendant.value === "yes";
+        attendantSelection.hidden = !hasAttendant;
+        form.querySelectorAll('[name="staff_id"]').forEach(option => { option.required = hasAttendant; if (!hasAttendant) option.checked = false; });
+      }));
+
       form.addEventListener("submit", (event) => {
         event.preventDefault();
 
         if (form.password.value !== form.password_confirm.value) {
           statusElement.textContent = "As senhas não conferem.";
+          return;
+        }
+
+        if (form.has_attendant.value === "yes" && !form.querySelector('[name="staff_id"]:checked')) {
+          statusElement.textContent = "Selecione o funcionário que está atendendo você.";
           return;
         }
 
@@ -290,7 +349,8 @@
             complement: form.complement.value.trim(),
             city: cityInput.value.trim(),
             state: stateInput.value.trim(),
-            password: form.password.value
+            password: form.password.value,
+            staffId: form.querySelector('[name="staff_id"]:checked')?.value || null
           })
         })
           .then(async (response) => {

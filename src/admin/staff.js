@@ -19,6 +19,10 @@ export const listPublicStaffContacts = async () => (await pool.query(`
   where role='employee' and is_active=true and nullif(trim(whatsapp),'') is not null
   order by full_name asc
 `)).rows;
+export const findActiveStaffById = async id => {
+  if(!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(String(id || ''))) return null;
+  return (await pool.query(`select id from public.app_users where id=$1 and role='employee' and is_active=true and nullif(trim(whatsapp),'') is not null`,[id])).rows[0] || null;
+};
 export const saveStaff = async ({id,fullName,email,whatsapp,password,photoUrl,isActive}) => {
   const normalizedWhatsapp = typeof whatsapp === 'string' ? whatsapp.trim().slice(0, 30) : null;
   const normalizedPhoto = typeof photoUrl === 'string' ? photoUrl.trim() : photoUrl === null ? '' : null;

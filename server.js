@@ -55,7 +55,7 @@ import {
 import { getBearerToken } from "./src/auth/request.js";
 import { onlyDigits, sanitizeUser } from "./src/auth/utils.js";
 import { resolveIronCallbackUrl } from "./src/config/ironpay.js";
-import { listPublicStaffContacts } from "./src/admin/staff.js";
+import { findActiveStaffById, listPublicStaffContacts } from "./src/admin/staff.js";
 
 dotenv.config();
 
@@ -217,7 +217,8 @@ app.post("/api/auth/register", async (req, res) => {
       complement,
       city,
       state,
-      password
+      password,
+      staffId
     } = req.body;
 
     if (!fullName || !email || !whatsapp || !cpf || !cep || !address || !number || !district || !password) {
@@ -230,6 +231,11 @@ app.post("/api/auth/register", async (req, res) => {
 
     if (existingUser) {
       return res.status(409).json({ message: "Já existe uma conta com este e-mail ou CPF." });
+    }
+
+    const selectedStaff = staffId ? await findActiveStaffById(staffId) : null;
+    if (staffId && !selectedStaff) {
+      return res.status(400).json({ message: "O funcionário selecionado não está disponível. Escolha outro atendimento." });
     }
 
     const passwordHash = await hashPassword(password);
@@ -245,7 +251,8 @@ app.post("/api/auth/register", async (req, res) => {
       complement: complement ? String(complement).trim() : null,
       city: city ? String(city).trim() : null,
       state: state ? String(state).trim() : null,
-      passwordHash
+      passwordHash,
+      ownerId: selectedStaff?.id || null
     });
 
     return sendAuthPayload(res, user);

@@ -2339,6 +2339,26 @@ img {
   min-width: 240px;
 }
 
+.register-attendant { margin: 0; padding: 18px; border: 1px solid rgba(25, 139, 44, 0.16); border-radius: 18px; background: #f8fbf6; }
+.register-attendant legend { padding: 0 8px; color: #233b58; font-size: 0.92rem; font-weight: 800; }
+.register-attendant__answer { display: flex; gap: 12px; flex-wrap: wrap; }
+.register-attendant__answer label { display: inline-flex; align-items: center; gap: 8px; min-height: 42px; padding: 0 16px; border: 1px solid #d8e6db; border-radius: 12px; background: #fff; color: #233b58; font-weight: 700; cursor: pointer; }
+.register-attendant__answer input { accent-color: #198b2c; }
+.register-attendant__selection { margin-top: 18px; padding-top: 18px; border-top: 1px solid #dce8df; }
+.register-attendant__selection[hidden] { display: none; }
+.register-attendant__selection > p { margin: 0 0 12px; color: #56645b; font-weight: 700; }
+.register-attendant__list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.register-attendant-card { position: relative; display: grid; grid-template-columns: 52px minmax(0, 1fr); align-items: center; gap: 12px; min-height: 76px; padding: 11px; border: 2px solid transparent; border-radius: 16px; background: #fff; cursor: pointer; box-shadow: 0 5px 18px rgba(22, 48, 34, 0.06); }
+.register-attendant-card:has(input:checked) { border-color: #198b2c; background: #f0faf2; }
+.register-attendant-card input { position: absolute; width: 1px; height: 1px; opacity: 0; }
+.register-attendant-card__photo { width: 52px; height: 52px; border-radius: 50%; object-fit: cover; background: #e5f2e8; }
+.register-attendant-card__photo--placeholder { display: grid; place-items: center; color: #fff; background: linear-gradient(145deg, #198b2c, #061e43); font-weight: 800; }
+.register-attendant-card strong { min-width: 0; color: #173118; font-size: 0.92rem; line-height: 1.3; }
+
+@media (max-width: 600px) {
+  .register-attendant__list { grid-template-columns: 1fr; }
+}
+
 .account-summary {
   border-top: 1px solid rgba(25, 139, 44, 0.12);
   margin-top: 28px;
