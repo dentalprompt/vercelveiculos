@@ -14,7 +14,7 @@ async function adminCall(actor,body){const req={method:'PUT',body,headers:{autho
 async function browserCall(user){const req={method:'GET',headers:{authorization:'Bearer '+signAccessToken(user)},query:{action:'tracking-dashboard',motion:'1'},url:'/api/customer?action=tracking-dashboard&motion=1'};const res=response();await customerHandler(req,res);return {status:res.statusCode,...res.body};}
 try{
  await ensureAdminSchema();
- const employee=await saveStaff({fullName:'Motion Employee',email:prefix+'@example.test',password:'testpass123'}); ids.push(employee.id);
+ const employee=await saveStaff({fullName:'Motion Employee',email:prefix+'@example.test',whatsapp:'11999990003',password:'testpass123'}); ids.push(employee.id);
  const customer=await createUser({fullName:'Motion Client',email:prefix+'-client@example.test',whatsapp:'11999999999',cpf:'motion-'+randomUUID(),cep:'06400000',address:'Rua Teste',number:'1',district:'Centro',city:'Barueri',state:'SP',passwordHash:await hashPassword('client123'),role:'customer',ownerId:employee.id}); ids.push(customer.id);
  const base={ownerId:employee.id,clientUserId:customer.id,clientName:customer.full_name,clientEmail:customer.email,itemName:'Veículo demonstrativo',status:'Em andamento',currentLocation:'Barueri - SP'};
  const first=await createTracking({...base,trackingCode:prefix+'-1'}),second=await createTracking({...base,trackingCode:prefix+'-2'});

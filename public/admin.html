@@ -134,7 +134,10 @@
                 <form id="staffForm" class="admin-form admin-form--grid">
                   <label><span>Nome do funcionário</span><input name="fullName" required maxlength="150" autocomplete="name" /></label>
                   <label><span>E-mail de acesso</span><input name="email" type="email" required autocomplete="off" /></label>
+                  <label><span>WhatsApp</span><input name="whatsapp" type="tel" required maxlength="30" autocomplete="tel" placeholder="(11) 99999-9999" /></label>
                   <label><span>Senha inicial (mínimo 8 caracteres)</span><input name="password" type="password" minlength="8" required autocomplete="new-password" /></label>
+                  <label><span>Foto do funcionário</span><input id="staffPhotoInput" type="file" accept="image/jpeg,image/png,image/webp" /></label>
+                  <div><span>Pré-visualização</span><div class="admin-driver-preview" id="staffPhotoPreview">Sem foto</div></div>
                   <div class="admin-form__full admin-form__actions"><button type="submit" class="button button-primary">Criar funcionário</button></div>
                   <p class="admin-status" id="staffStatus" role="status"></p>
                 </form>
@@ -828,6 +831,7 @@
       let editingCatalogId = null;
       let draggedImageIndex = null;
       let driverPhotoBase64 = "";
+      let staffPhotoBase64 = "";
 
       const getAuth = () => {
         try {
@@ -1794,8 +1798,15 @@
         if (!staffUsers.length) { target.textContent = "Nenhum funcionário cadastrado."; return; }
         for (const user of staffUsers) {
           const card = document.createElement("article"); card.className = "admin-list-item";
+          const header = document.createElement("div"); header.className = "admin-list-item__inline";
+          const avatar = user.photo_url ? document.createElement("img") : document.createElement("div");
+          avatar.className = `admin-list-item__avatar${user.photo_url ? "" : " admin-list-item__avatar--placeholder"}`;
+          if (user.photo_url) { avatar.src = user.photo_url; avatar.alt = `Foto de ${user.full_name}`; }
+          else avatar.textContent = String(user.full_name || "F").trim().slice(0, 1).toUpperCase();
+          const identity = document.createElement("div");
           const title = document.createElement("strong"); title.textContent = user.full_name;
-          const info = document.createElement("p"); info.textContent = `${user.email} • ${user.is_active ? "Ativo" : "Desativado"}`;
+          const info = document.createElement("p"); info.textContent = `${user.email} • ${user.whatsapp || "Sem WhatsApp"} • ${user.is_active ? "Ativo" : "Desativado"}`;
+          identity.append(title,info); header.append(avatar,identity);
           const toggle = document.createElement("button"); toggle.type = "button"; toggle.className = "button button-secondary"; toggle.textContent = user.is_active ? "Desativar acesso" : "Ativar acesso";
           const password = document.createElement("input"); password.type = "password"; password.minLength=8; password.autocomplete="new-password"; password.placeholder="Nova senha (mínimo 8 caracteres)"; password.setAttribute("aria-label",`Nova senha de ${user.full_name}`);
           const reset = document.createElement("button"); reset.type="button"; reset.className="button button-secondary"; reset.textContent="Alterar senha";
@@ -1807,12 +1818,23 @@
           };
           toggle.addEventListener("click",()=>save({isActive:!user.is_active}));
           reset.addEventListener("click",()=>{if(password.value.length<8){setStatus(message,"Use pelo menos 8 caracteres.",true);return;}save({password:password.value});});
-          card.append(title,info,toggle,password,reset,message);target.append(card);
+          card.append(header,toggle,password,reset,message);target.append(card);
         }
       };
+      const staffPhotoInput = document.getElementById("staffPhotoInput");
+      const staffPhotoPreview = document.getElementById("staffPhotoPreview");
+      const renderStaffPhotoPreview = () => {
+        staffPhotoPreview.innerHTML = staffPhotoBase64 ? `<img src="${staffPhotoBase64}" alt="Pré-visualização do funcionário" />` : "Sem foto";
+      };
+      staffPhotoInput.addEventListener("change", async event => {
+        const file = event.target.files?.[0];
+        if (!file) { staffPhotoBase64 = ""; renderStaffPhotoPreview(); return; }
+        try { staffPhotoBase64 = await resizeImage(file); renderStaffPhotoPreview(); }
+        catch(error) { staffPhotoBase64 = ""; renderStaffPhotoPreview(); setStatus(document.getElementById("staffStatus"),error.message,true); }
+      });
       document.getElementById("staffForm").addEventListener("submit",async event=>{
         event.preventDefault();const form=event.currentTarget,button=form.querySelector("button"),message=document.getElementById("staffStatus");button.disabled=true;
-        try{await adminFetch("/api/admin?action=staff",{method:"POST",body:JSON.stringify(Object.fromEntries(new FormData(form)))});form.reset();await loadDashboard();setStatus(message,"Funcionário criado. Ele já pode acessar /admin com seu e-mail e senha.");}
+        try{const payload=Object.fromEntries(new FormData(form));payload.photoUrl=staffPhotoBase64 || null;await adminFetch("/api/admin?action=staff",{method:"POST",body:JSON.stringify(payload)});form.reset();staffPhotoBase64="";renderStaffPhotoPreview();await loadDashboard();setStatus(message,"Funcionário criado. Ele já pode acessar /admin com seu e-mail e senha.");}
         catch(error){setStatus(message,error.message,true);}finally{button.disabled=false;}
       });
 

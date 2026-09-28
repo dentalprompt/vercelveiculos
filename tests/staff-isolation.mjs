@@ -17,8 +17,8 @@ async function call(actor,action,method='GET',body={},query={}){
 try{
  await ensureAdminSchema();await Promise.all([ensureInvoiceSchema(),ensureContractSchema()]);
  const root=(await pool.query("select * from public.app_users where role='admin' limit 1")).rows[0];assert(root);
- let r=await call(root,'staff','POST',{fullName:'Employee A',email:prefix+'a@example.test',password:'testpass123'});assert.equal(r.status,201,JSON.stringify(r));const a=r.staff;users.push(a.id);
- r=await call(root,'staff','POST',{fullName:'Employee B',email:prefix+'b@example.test',password:'testpass123'});assert.equal(r.status,201,JSON.stringify(r));const b=r.staff;users.push(b.id);
+ let r=await call(root,'staff','POST',{fullName:'Employee A',email:prefix+'a@example.test',whatsapp:'11999990001',photoUrl:'data:image/png;base64,dGVzdGU=',password:'testpass123'});assert.equal(r.status,201,JSON.stringify(r));const a=r.staff;users.push(a.id);assert.equal(a.whatsapp,'11999990001');assert.match(a.photo_url,/^data:image\/png;base64,/);
+ r=await call(root,'staff','POST',{fullName:'Employee B',email:prefix+'b@example.test',whatsapp:'11999990002',password:'testpass123'});assert.equal(r.status,201,JSON.stringify(r));const b=r.staff;users.push(b.id);
  assert.equal((await call(a,'staff')).status,403);
  assert.equal((await call(a,'staff','POST',{fullName:'Escalation',email:'x@example.test',password:'testpass123'})).status,403);
  r=await call(null,'session','POST',{email:a.email,password:'testpass123'});assert.equal(r.status,200,JSON.stringify(r));
