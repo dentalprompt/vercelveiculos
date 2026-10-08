@@ -508,8 +508,8 @@
                         <input type="text" name="paymentMethod" id="contractPaymentMethod" required />
                       </label>
                       <label>
-                        <span>OBSERVAÇÃO DO PAGAMENTO</span>
-                        <select name="paymentNotes" id="contractPaymentNotes"><option value="cash">À vista</option><option value="installments">Parcelado com entrada</option><option value="annual">Plano Safra - Parcelamento Anual</option></select>
+                        <span>CONDIÇÃO DE PAGAMENTO</span>
+                        <select name="paymentNotes" id="contractPaymentNotes"><option value="cash">À vista</option><option value="delivery">Entrada + restante na entrega</option><option value="installments">Parcelado com entrada</option><option value="annual">Plano Safra - Parcelamento Anual</option></select>
                       </label>
                       <div id="contractInstallments" class="admin-form__full admin-form--grid hidden">
                         <label><span>VALOR DA ENTRADA</span><input id="contractDownPayment" type="text" inputmode="decimal" placeholder="R$ 0,00" /></label>
@@ -517,6 +517,10 @@
                         <label><span id="contractInstallmentCountLabel">QUANTIDADE DE PARCELAS</span><input id="contractInstallmentCount" type="number" min="1" max="600" step="1" /></label>
                         <label><span id="contractInstallmentValueLabel">VALOR DE CADA PARCELA</span><input id="contractInstallmentValue" type="text" inputmode="decimal" placeholder="R$ 0,00" /></label>
                         <label><span>DIA DE VENCIMENTO DAS PARCELAS</span><input id="contractInstallmentDay" type="number" min="1" max="31" step="1" placeholder="Ex.: 10" /></label>
+                      </div>
+                      <div id="contractDeliveryPaymentFields" class="admin-form__full admin-form--grid hidden">
+                        <label><span>VALOR RESTANTE A PAGAR NA ENTREGA</span><input id="contractDeliveryPaymentValue" type="text" inputmode="decimal" placeholder="R$ 0,00" /></label>
+                        <label><span>DATA DO PAGAMENTO RESTANTE NA ENTREGA</span><input id="contractDeliveryPaymentDate" type="date" /></label>
                       </div>
                       <label>
                         <span>DATA DE ENTREGA</span>
@@ -1672,14 +1676,22 @@
       const installmentValue = document.getElementById("contractInstallmentValue");
       const downPaymentDate = document.getElementById("contractDownPaymentDate");
       const installmentDay = document.getElementById("contractInstallmentDay");
+      const deliveryPaymentFields = document.getElementById("contractDeliveryPaymentFields");
+      const deliveryPaymentValue = document.getElementById("contractDeliveryPaymentValue");
+      const deliveryPaymentDate = document.getElementById("contractDeliveryPaymentDate");
       const syncPaymentFields = () => {
         const annual = contractPaymentNotes.value === "annual";
-        const enabled = annual || contractPaymentNotes.value === "installments";
+        const installmentMode = annual || contractPaymentNotes.value === "installments";
+        const deliveryMode = contractPaymentNotes.value === "delivery";
+        const enabled = installmentMode || deliveryMode;
         installmentFields.classList.toggle("hidden", !enabled);
-        [downPayment, installmentCount, installmentValue, downPaymentDate].forEach(input => { input.required = enabled; input.disabled = !enabled; });
-        installmentDay.required = enabled && !annual;
-        installmentDay.disabled = !enabled || annual;
-        installmentDay.closest("label").classList.toggle("hidden", annual);
+        [downPayment, downPaymentDate].forEach(input => { input.required = enabled; input.disabled = !enabled; });
+        [installmentCount, installmentValue].forEach(input => { input.required = installmentMode; input.disabled = !installmentMode; input.closest("label").classList.toggle("hidden", !installmentMode); });
+        installmentDay.required = contractPaymentNotes.value === "installments";
+        installmentDay.disabled = installmentDay.required ? false : true;
+        installmentDay.closest("label").classList.toggle("hidden", !installmentDay.required);
+        deliveryPaymentFields.classList.toggle("hidden", !deliveryMode);
+        [deliveryPaymentValue, deliveryPaymentDate].forEach(input => { input.required = deliveryMode; input.disabled = !deliveryMode; });
         document.getElementById("contractInstallmentCountLabel").textContent = annual ? "QUANTIDADE DE PARCELAS ANUAIS (1 POR ANO)" : "QUANTIDADE DE PARCELAS";
         document.getElementById("contractInstallmentValueLabel").textContent = annual ? "VALOR DE CADA PARCELA ANUAL" : "VALOR DE CADA PARCELA";
       };
@@ -1690,12 +1702,15 @@
           mode: contractPaymentNotes.value,
           downPayment: downPayment.value,
           downPaymentDate: downPaymentDate.value,
+          deliveryPayment: deliveryPaymentValue.value,
+          deliveryPaymentDate: deliveryPaymentDate.value,
+          totalValue: contractAmountValue.value,
           installmentCount: installmentCount.value,
           installmentValue: installmentValue.value,
           installmentDay: installmentDay.value
         });
       };
-      [contractAmountValue, downPayment, installmentValue].forEach(input => {
+      [contractAmountValue, downPayment, installmentValue, deliveryPaymentValue].forEach(input => {
         input.addEventListener("blur", () => {
           const value = parseBRL(input.value);
           if (input.value.trim() && Number.isFinite(value) && value >= 0) input.value = formatBRL(value);

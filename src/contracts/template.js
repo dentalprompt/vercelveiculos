@@ -145,8 +145,8 @@ export const renderAcquisitionContractHtml = (contract) => {
           <strong>(${escapeHtml(contract.amountText || "")})</strong>.
         </p>
         <p>
-          2.1. O pagamento será realizado de forma <strong>${escapeHtml(contract.paymentMethod || "-")}</strong>,
-          conforme condições ajustadas entre as partes, em <strong>${escapeHtml(contract.paymentNotes || "-")}</strong>.
+          2.1. O pagamento será realizado por <strong>${escapeHtml(contract.paymentMethod || "-")}</strong>,
+          observando-se o seguinte cronograma: <strong>${escapeHtml(contract.paymentNotes || "-")}</strong>.
         </p>
         <p>2.2. As partes declaram estar plenamente cientes e de acordo com a forma de pagamento estabelecida, comprometendo-se ao fiel cumprimento das obrigações financeiras assumidas.</p>
       </section>
