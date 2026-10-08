@@ -250,6 +250,8 @@
         return galleryImages.length ? galleryImages : [item.image_url].filter(Boolean);
       };
 
+      const getItemDetailLink = (item) => new URL(`./detalhe.html?slug=${encodeURIComponent(item.slug)}`, window.location.href).href;
+
       const showDetailImagePlaceholder = (message = "Sem foto disponível") => {
         detailMainImage.removeAttribute("src");
         detailMainImage.alt = "";
@@ -343,7 +345,7 @@
                 </div>
                 <div class="product-card-actions">
                 <a class="product-view-lot" href="./detalhe.html?slug=${encodeURIComponent(item.slug)}">VER LOTE</a>
-                <button class="whatsapp-btn" type="button" data-staff-contact data-vehicle="${encodeURIComponent(item.title || "")}" data-price="${encodeURIComponent(formatCurrency(item.price))}" data-description="${encodeURIComponent(item.description || "")}" data-image="${encodeURIComponent(gallery[0] || "")}" aria-label="Escolher funcionário para conversar pelo WhatsApp"><img src="./whatsapp1.png" alt="" width="36" height="36" loading="lazy" /></button>
+                <button class="whatsapp-btn" type="button" data-staff-contact data-vehicle="${encodeURIComponent(item.title || "")}" data-price="${encodeURIComponent(formatCurrency(item.price))}" data-description="${encodeURIComponent(item.description || "")}" data-link="${encodeURIComponent(getItemDetailLink(item))}" aria-label="Escolher funcionário para conversar pelo WhatsApp"><img src="./whatsapp1.png" alt="" width="36" height="36" loading="lazy" /></button>
                 </div>
               </div>
             </div>
@@ -380,7 +382,7 @@
           detailBuyButton.dataset.vehicle = encodeURIComponent(item.title || "");
           detailBuyButton.dataset.price = encodeURIComponent(formatCurrency(item.price));
           detailBuyButton.dataset.description = encodeURIComponent(item.description || "");
-          detailBuyButton.dataset.image = encodeURIComponent(gallery[0] || "");
+          detailBuyButton.dataset.link = encodeURIComponent(getItemDetailLink(item));
 
           detailThumbs.innerHTML = gallery
             .map(

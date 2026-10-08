@@ -33,7 +33,7 @@
         `Veículo: ${item.vehicle}`,
         `Preço: ${item.price || "Sob consulta"}`,
         `Descrição: ${item.description || "Não informada"}`,
-        item.image ? `Foto do veículo: ${item.image}` : ""
+        item.link ? `Link do veículo: ${item.link}` : ""
       ].filter(Boolean).join("\n")
     : "Olá, gostaria de falar com a equipe da VERCEL VEÍCULOS E MAQUINÁRIOS.";
   const render = (contacts, item) => {
@@ -83,7 +83,7 @@
       vehicle: decode(trigger.dataset.vehicle),
       price: decode(trigger.dataset.price),
       description: decode(trigger.dataset.description),
-      image: decode(trigger.dataset.image)
+      link: decode(trigger.dataset.link)
     };
     try { render(await loadContacts(), item); }
     catch(error) {
