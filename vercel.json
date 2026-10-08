@@ -88,6 +88,10 @@
       "destination": "/contrato.html"
     },
     {
+      "source": "/veiculo/:slug",
+      "destination": "/api/share?slug=:slug"
+    },
+    {
       "source": "/detalhe",
       "destination": "/detalhe.html"
     }

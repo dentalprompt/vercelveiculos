@@ -222,7 +222,7 @@
         return galleryImages[0] || item.image_url || "";
       };
 
-      const getItemDetailLink = (item) => `https://www.vercelveiculosemaquinarios.com.br/detalhe.html?slug=${encodeURIComponent(item.slug)}`;
+      const getItemDetailLink = (item) => `https://www.vercelveiculosemaquinarios.com.br/veiculo/${encodeURIComponent(item.slug)}`;
 
       const createProductCard = (item) => {
         const image = getItemImage(item);
