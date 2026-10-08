@@ -222,7 +222,7 @@
         return galleryImages[0] || item.image_url || "";
       };
 
-      const getItemDetailLink = (item) => new URL(`./detalhe.html?slug=${encodeURIComponent(item.slug)}`, window.location.href).href;
+      const getItemDetailLink = (item) => `https://vercelveiculos.com.br/detalhe.html?slug=${encodeURIComponent(item.slug)}`;
 
       const createProductCard = (item) => {
         const image = getItemImage(item);
