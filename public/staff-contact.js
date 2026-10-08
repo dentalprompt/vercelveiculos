@@ -24,10 +24,19 @@
     const digits = String(value || "").replace(/\D/g, "");
     return digits.length === 10 || digits.length === 11 ? `55${digits}` : digits;
   };
-  const messageFor = vehicle => vehicle
-    ? `Olá, tenho interesse no veículo ${vehicle} da VERCEL VEÍCULOS E MAQUINÁRIOS.`
+  const decode = value => {
+    try { return decodeURIComponent(value || ""); } catch { return value || ""; }
+  };
+  const messageFor = item => item.vehicle
+    ? [
+        "Olá, tenho interesse neste veículo da VERCEL VEÍCULOS E MAQUINÁRIOS:",
+        `Veículo: ${item.vehicle}`,
+        `Preço: ${item.price || "Sob consulta"}`,
+        `Descrição: ${item.description || "Não informada"}`,
+        item.image ? `Foto do veículo: ${item.image}` : ""
+      ].filter(Boolean).join("\n")
     : "Olá, gostaria de falar com a equipe da VERCEL VEÍCULOS E MAQUINÁRIOS.";
-  const render = (contacts, vehicle) => {
+  const render = (contacts, item) => {
     list.replaceChildren();
     if (!contacts.length) {
       const empty = document.createElement("p");
@@ -51,7 +60,7 @@
       const button = document.createElement("a");
       button.className = "staff-contact-card__button";
       button.textContent = "Conversar agora";
-      button.href = `https://wa.me/${normalizedNumber(contact.whatsapp)}?text=${encodeURIComponent(messageFor(vehicle))}`;
+      button.href = `https://wa.me/${normalizedNumber(contact.whatsapp)}?text=${encodeURIComponent(messageFor(item))}`;
       button.target = "_blank";
       button.rel = "noopener noreferrer";
       card.append(photo, info, button);
@@ -70,9 +79,13 @@
     document.body.classList.add("staff-contact-open");
     list.innerHTML = '<p class="staff-contact-message">Carregando equipe...</p>';
     modal.querySelector(".staff-contact-modal__close").focus();
-    let vehicle = "";
-    try { vehicle = decodeURIComponent(trigger.dataset.vehicle || ""); } catch { vehicle = ""; }
-    try { render(await loadContacts(), vehicle); }
+    const item = {
+      vehicle: decode(trigger.dataset.vehicle),
+      price: decode(trigger.dataset.price),
+      description: decode(trigger.dataset.description),
+      image: decode(trigger.dataset.image)
+    };
+    try { render(await loadContacts(), item); }
     catch(error) {
       const message = document.createElement("p");
       message.className = "staff-contact-message";
